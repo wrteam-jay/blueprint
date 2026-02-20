@@ -7,7 +7,93 @@ description: Use when building a blueprint from scratch through conversation —
 
 This skill builds a blueprint through conversation. The goal is to surface ambiguities, establish shared vocabulary, trace real flows end-to-end, and produce a document the whole team can reason about.
 
-The same principles apply whether you are talking to a product manager about a new feature or a founder describing a system they want to build. The challenge is always the same: separating what the system should **do** from how it might be **built**, and making implicit decisions explicit.
+The same principles apply whether you are talking to a product manager about a new feature or a founder describing a system they want to build. The challenge is always the same: separating what the system should *do* from how it might be *built*, and making implicit decisions explicit.
+
+---
+
+## Do not
+
+These are the most common ways elicitation goes wrong. Check against this list before publishing any output.
+
+- **Do not write a scenario without first identifying its trigger.** A scenario without a trigger is a story without a beginning.
+- **Do not write a scenario without at least one failure path.** Happy paths alone are half a spec.
+- **Do not define a term using that term in the definition.** Circular definitions give the reader nothing.
+- **Do not write a business rule without a source.** If you cannot name the policy, regulation or decision that created the rule, mark it as an open question.
+- **Do not infer a missing actor — ask.** "The system sends an email" has a missing actor. Who or what triggers the send?
+- **Do not write implementation into the blueprint.** If you write the words `API`, `database`, `endpoint`, `table`, `component`, `Redis`, `SQL`, `webhook handler`, `cron job`, `microservice` — stop and rephrase at the behaviour level.
+- **Do not fill an open question with an assumption.** If you do not know something, open a question and assign it. Do not invent an answer to keep moving.
+- **Do not proceed past a phase without a verification checkpoint.** Show captures, get confirmation, then continue.
+- **Do not leave a contradiction silently in the document.** Surface it immediately when you detect it.
+- **Do not accept "it depends" as an answer.** It is the location of a requirement. Ask: "Depends on what? Walk me through the cases."
+- **Do not generate a complete spec from a single sentence.** Elicitation is a conversation. Generating all at once produces confident-sounding fiction.
+
+---
+
+## Conversation mechanics
+
+### Opening
+
+Start every elicitation session with:
+
+1. Establish the goal: "We are going to capture how this works and what it must do — not how we will build it."
+2. Establish scope for this session: "What are we covering today? Should we stay focused on one flow, or capture the whole feature?"
+3. Ask the one-sentence question: "In one sentence, what does this thing do?"
+
+The one-sentence answer reveals whether you are aligned on the subject before spending time on details.
+
+### One question at a time
+
+Ask one question. Wait for the answer. Probe the answer. Then ask the next question. Do not bundle questions. Bundled questions produce bundled answers that are hard to separate later.
+
+### Verification checkpoints
+
+After each phase, show what has been captured and ask for confirmation before proceeding:
+
+> "Here's what I've captured so far. Does this match your understanding? Is anything missing or wrong?"
+
+Show only the section you just captured — not the whole draft. Reviewing too much at once causes people to stop reading carefully. Checkpoints after each phase prevent large amounts of wrong work accumulating silently.
+
+### Handling "I don't know"
+
+When a stakeholder says "I don't know", do not fill the gap. Convert it to an open question immediately:
+
+> "That's fine — let me note that as an open question rather than assume. Who should resolve this? By when does it need to be resolved?"
+
+Then move on. Do not get stuck. Accumulate open questions and return to them at the end.
+
+### Handling contradictions
+
+When a new statement conflicts with something already captured, surface it immediately:
+
+> "I want to flag a conflict before we go further. Earlier you said [X]. Now you're saying [Y]. These two things cannot both be true as stated. Which takes precedence? Or is there a condition that determines which applies?"
+
+Do not silently note both. Do not average them. Name the conflict, explore it, and either resolve it or log it as an open question with an owner.
+
+Track contradictions actively. Keep a mental (or explicit) list of key facts stated: statuses, rules, actor capabilities. When a new statement touches the same area, check it against what was said before.
+
+### Handling scope creep
+
+When a stakeholder introduces something outside the agreed scope:
+
+> "That sounds important — let me note it so we don't lose it. I'll add it to the out-of-scope list with a note that it may need its own blueprint. For now, can we stay focused on [current topic]?"
+
+Park it, do not chase it. Scope creep in elicitation produces bloated blueprints that are accurate about many things but authoritative about nothing.
+
+### Signalling phase transitions
+
+When moving between phases, name it explicitly:
+
+> "Good — I have the actors and terminology captured. Let me show you what I have, and then we'll move to user stories."
+
+Explicit transitions keep the stakeholder oriented and set expectations for what comes next.
+
+### Closing a session
+
+At the end of every session:
+1. Show the full draft (or the sections covered in this session)
+2. Read through the open questions list — assign an owner and deadline to each
+3. Record any decisions made during the session in the decision log with rationale
+4. State what is covered and what still needs to be captured in a follow-up
 
 ---
 
@@ -27,12 +113,13 @@ Out-of-scope is as important as in-scope. Get both lists before proceeding.
 **"Are there related systems or features we should know about but not specify here?"**
 Establishes boundaries and identifies related blueprints to reference.
 
-Capture at the top:
+Capture at the top of the document before any other section:
+
 ```markdown
 **About:** [one sentence]
-**Covers:** [what's in scope]
-**Does not cover:** [what's explicitly out]
-**Related:** [adjacent systems/specs]
+**Covers:** [what is in scope]
+**Does not cover:** [what is explicitly out — with reasons]
+**Related blueprints:** [adjacent systems/specs]
 ```
 
 ---
@@ -45,11 +132,13 @@ Capture at the top:
 
 1. "What problem does this solve? Who has this problem today?"
 2. "What happens if this doesn't get built?"
-3. "Is there an existing workaround? What breaks about it?"
+3. "Is there an existing workaround? What is broken about it?"
 4. "Who asked for this — and what did they actually say they needed?"
 5. "Is there a deadline? Is it fixed or flexible?"
 
-**Output:** A Context section that a new team member could read to understand why this feature exists.
+**Verification checkpoint:** "Here's the context I've captured: [show paragraph]. Does this accurately describe the problem and why this exists?"
+
+**Output:** A Context section a new team member could read to understand why this feature exists.
 
 **Watch for:** Features described in terms of their solution ("we need a dashboard"). Redirect: "What decisions does someone currently make without enough information?"
 
@@ -57,72 +146,61 @@ Capture at the top:
 
 ### Phase 2: Actors and roles
 
-**Goal:** Name every party who interacts with the system and describe what they can do.
+**Goal:** Name every party who interacts with the system.
 
 1. "Who uses this?"
 2. "Are there different types of user? What distinguishes them?"
 3. "Are there system actors — automated processes, external services?"
 4. "What can each actor do that the others cannot?"
-5. "Is there a guest or unauthenticated state? What can someone do before they log in?"
+5. "Is there a guest or unauthenticated state?"
 
-For each actor, capture:
-- Name (use what the business actually calls them)
-- Who they are
-- What they can do
-- What they cannot do (if the restriction matters)
+For each actor: name, who they are, what they can do, what they cannot do (if the restriction matters).
 
-**Watch for:** Actors that are actually two things. "Admin" often means both a billing admin and a user admin — different permissions, different flows. Probe when a role seems broad.
+**Verification checkpoint:** "Here are the actors I've identified: [list]. Are any missing? Does any actor here cover two different roles that should be split?"
+
+**Watch for:** "Admin" covering both billing admin and user admin — different permissions, should be named separately.
 
 ---
 
 ### Phase 3: Terminology
 
-**Goal:** Build the shared vocabulary before anything else, so the rest of the conversation uses consistent terms.
+**Goal:** Build the shared vocabulary before anything else.
 
-This is the most underrated phase. Terminology conflicts cause more miscommunication than missing requirements. If your product team calls it a "project" and your engineering team calls it a "workspace", you have a bug waiting to happen.
-
-Questions:
 1. "What are the main things this system manages — the nouns?"
 2. "What do you call [thing]? Does engineering use the same word?"
 3. "Is [term A] and [term B] the same thing, or different?"
 4. "Are there terms you use that might mean something different to someone outside the team?"
 
-For each key term, capture a precise one-sentence definition. Not a dictionary definition — what it means *in this system*.
+For each key term, write a precise one-sentence definition. Not a dictionary definition — what it means *in this system*.
 
-```markdown
-**Order** — A customer's intent to purchase a set of products. Exists from the point
-            of cart confirmation. Distinct from a *Transaction*, which is the financial
-            record of payment.
+**Verification checkpoint:** "Here are the terms I've defined: [show glossary]. Are the definitions accurate? Are there terms we use that aren't here?"
 
-**Transaction** — The financial record of a payment attempt. An Order may have
-                  multiple Transactions (e.g., one failed attempt, one successful).
-```
+**Resolution rule:** When two terms exist for the same concept, resolve it now. Pick one. Define it. The other term should not appear anywhere in the document — not even in a "see also" note. Terminology conflicts that survive into implementation become two models, two join tables, two sources of confusion.
 
 **Watch for:**
-- The same word meaning different things to different stakeholders
-- Two words being used for the same concept ("booking" and "reservation")
-- Terms that only make sense to insiders ("the pipeline", "the queue")
-
-When you find a conflict: stop, name it, resolve it. "You said 'booking' and earlier you said 'reservation'. Are these the same thing?" Do not move on until it is resolved. Terminology conflicts that survive into implementation become dual models with join tables pointing both ways.
+- Two words for the same concept ("booking" and "reservation")
+- One word meaning two different things to different stakeholders
+- Terms that only make sense to insiders
 
 ---
 
 ### Phase 4: User stories
 
-**Goal:** Capture who needs what and why, before getting into how the system delivers it.
-
-Stories are not implementation tasks. They are statements of user need that frame every subsequent design decision.
+**Goal:** Capture who needs what and why.
 
 Format: **As a [actor], I want to [action], so that [outcome].**
 
-Questions per flow:
-1. "Walk me through this from the user's perspective, not the system's perspective."
+1. "Walk me through this from the user's perspective, not the system's."
 2. "What are they trying to accomplish? What does success look like for them?"
-3. "What would make this frustrating or broken from their point of view?"
+3. "Do we have evidence this is what users actually need, or is this our assumption?"
 
-Group stories by actor or by flow. A story without a "so that" clause is incomplete — the outcome is what makes the story a requirement rather than a feature request.
+For each story, ask for evidence: analytics data, support ticket patterns, user research findings, observed behaviour. Annotate the story with whatever exists.
 
-**Watch for:** Stories written from the system's perspective ("the system processes the payment"). Reframe: who is the actor, what is their goal, why does it matter to them?
+**If evidence is absent:** Note it as an open question. "We believe users need X, but we have not validated this." A story with no evidence is a hypothesis. It should be marked as such.
+
+**Verification checkpoint:** "Here are the user stories I've captured: [show list]. Are any missing? Does any story assume a user need we haven't validated?"
+
+**Watch for:** Stories written from the system's perspective ("the system processes"). Reframe: who is the actor, what is their goal, why does it matter to them?
 
 ---
 
@@ -130,133 +208,129 @@ Group stories by actor or by flow. A story without a "so that" clause is incompl
 
 **Goal:** Trace real end-to-end journeys through the system, including error paths.
 
-This is the most important phase. Requirements without scenarios are abstract. Scenarios without requirements miss constraints. The combination is what produces a spec the whole team can reason about.
+#### Happy path first
 
-#### For each major flow:
-
-**Start with the happy path:**
 1. "Walk me through [scenario] from start to finish."
 2. "What triggers this? A user action? Time passing? An external event?"
 3. "What is the first thing that happens?"
 4. "Then what? And then?"
-5. "What does the user see at each step?"
-6. "What has changed in the system when this is complete?"
+5. "What has changed in the system when this is complete? What is the end state?"
 
-**Then probe the edges:**
-1. "What if [step] fails? What does the user see? What does the system do?"
-2. "What if the user does this in the wrong order?"
-3. "What if they wait too long? Are there timeouts or deadlines?"
-4. "What if the same action is triggered twice?"
-5. "What if an external service is unavailable at this step?"
+#### Then probe every branch
 
-**Then check the decision points:**
-1. "You described [branch]. What determines which path is taken?"
-2. "Is that decision made by the user, the system, or an admin?"
-3. "Can that decision be reversed? By whom?"
+6. "You described [decision point]. What determines which path is taken?"
+7. "Is that decision made by the user, the system, or an admin?"
+8. "What if [step] fails or is unavailable?"
+9. "What if the user waits too long? Are there timeouts?"
+10. "What if this action is triggered twice?"
 
-**Diagram as you go.** After tracing a flow verbally, sketch it as a diagram. Mermaid flowcharts for user journeys, sequence diagrams for multi-party interactions, state diagrams for entity lifecycles. See the [diagram guide](../../references/diagram-guide.md).
+#### Contradiction check
+
+After tracing a flow: "Does anything in this scenario conflict with what we said in the actors section or the terminology section?"
+
+After tracing multiple flows: "Do any of these flows make assumptions about the domain model that we haven't captured?"
+
+**Verification checkpoint:** "Here is the [scenario name] flow: [show it]. Does this match how it actually works? Any steps missing? Any branches I got wrong?"
 
 **Watch for:**
 - Flows that assume capabilities not yet in scope
-- Flows with no terminal state (every path must end somewhere)
-- Decision points with no stated owner ("it depends" is a gap, not an answer)
-- Notification steps that assume a notification system not specified
+- Flows with no terminal state
+- Decision points with no stated owner
+- "And then it sends a notification" without specifying who is notified, when, and through what channel
 
 ---
 
 ### Phase 6: Domain model
 
-**Goal:** Name the entities the system manages, describe their states, and map their relationships.
+**Goal:** Name the entities, their states, and their relationships.
 
-Entities are the persistent things in the system — the nouns that have lifecycle and identity. Not UI components, not API responses — the actual domain objects.
-
-Questions:
 1. "What are the things this system creates, stores, and manages?"
 2. "What states can [entity] be in? What does each state mean?"
 3. "What triggers the transition from one state to another?"
-4. "How is [entity A] related to [entity B]? One-to-one? One-to-many?"
+4. "How is [entity A] related to [entity B]?"
 5. "Who creates [entity]? Who can change it? Who can delete it?"
-6. "What happens to [entity B] when [entity A] is deleted or cancelled?"
+6. "What must always be true about [entity], regardless of state?"
 
-For each entity, capture:
-- Name and one-sentence definition
-- Its states (if it has a lifecycle)
-- Its key relationships
-- Who owns its lifecycle
+Use the structured entity card format for each entity:
 
-**Watch for:** Entities that are really two things collapsed into one (a single "User" that is both a buyer and a seller). Entities with implicit states hidden in boolean fields ("is_active" and "is_verified" might mean the user has four actual states). Fields that are really relationships.
+```
+Entity: [Name]
+Definition: [One sentence]
+States: state1 → state2 | terminal_state
+Invariants: [What must always be true]
+Relationships: [belongs to X, contains Y (0+), has one Z]
+Lifecycle owner: [who creates, transitions, deletes]
+```
+
+**Verification checkpoint:** "Here is the domain model: [show entities]. Do the states look right? Are any entities missing? Any relationships wrong?"
+
+**Watch for:** Boolean fields or nullable timestamps encoding implicit states. `is_active` + `is_verified` = four unnamed states. Name them explicitly.
 
 ---
 
 ### Phase 7: Requirements and business rules
 
-**Goal:** Capture the constraints — what the system must do and what it must prevent.
+**Goal:** Capture constraints — what the system must do and what it must prevent.
 
-By this point you have flows and scenarios. Requirements are the rules that govern them. Work through:
-
-**Functional requirements** — "must" statements about system behaviour:
+**Functional requirements:**
 - "What must always happen when [event]?"
 - "What must never be allowed?"
 - "Are there limits — maximums, minimums, quotas?"
 - "Are there time windows — deadlines, expirations, schedules?"
 
-**Business rules** — constraints that come from policy, regulation or product decision:
+**Business rules:**
 - "Are there eligibility conditions — who can do this, under what circumstances?"
-- "Are there role restrictions — only [role] can do [action]?"
-- "Are there compliance requirements — GDPR, SOC 2, industry-specific?"
-- "Are there exceptions — cases where the normal rule does not apply?"
+- "Are there role restrictions?"
+- "Are there compliance requirements?"
+- "What are the exceptions — cases where the normal rule does not apply?"
 
-For each rule, capture its source. "Users cannot delete their account while a subscription is active" needs a reason: legal obligation? Data integrity? Product decision? The reason matters when someone wants to change it.
+For every rule: **name its source**. The policy, regulation or stakeholder decision that created it. Source-less rules can be changed by anyone. If you cannot name the source, open a question.
 
-**Non-functional requirements** — how well the system must perform:
-- Performance targets (specific thresholds, not "should be fast")
-- Availability requirements
-- Security requirements (not "should be secure")
-- Data retention and residency
+**Non-functional requirements:** Specific thresholds, not vague adjectives.
+- Not "should be fast" → "p95 response under 2s at 1,000 concurrent users"
+- Not "should be secure" → "must satisfy SOC 2 Type II access controls"
+- Not "should be available" → "99.9% uptime, 8h RTO, 1h RPO"
+
+**Verification checkpoint:** "Here are the requirements I've captured: [show list]. Are any missing? Are any sourced incorrectly? Are the non-functional thresholds right?"
 
 ---
 
 ### Phase 8: Open questions and decisions
 
-**Goal:** Capture everything unresolved and everything already settled.
+**At the end of every session:**
 
-At the end of a session, surface all the things that came up but were not resolved.
+**Open questions** — everything unresolved:
+- "We talked about [X] but were not sure. Let me capture that as an open question: [precise statement]. Who owns this? By when does it need to be resolved? What does it block?"
 
-"We talked about [X]. You were not sure. Let me capture that as an open question: [precise statement of the question]. Who should resolve this? By when?"
+**Decision log** — everything decided during the session:
+- "We decided [X]. The reason was [Y]. Let me record that so it does not get re-debated."
+- Include: what was decided, why, who decided it, what alternatives were considered
 
-Also capture decisions made during the session in the Decision Log:
-
-"We decided [X]. The reason was [Y]. Let me record that so we do not re-debate it."
-
-A decision log is underrated. Every team re-debates settled decisions in meeting rooms. A log with rationale stops that.
+Every open question must have an owner and a deadline. Ownerless questions do not get resolved.
 
 ---
 
 ## Elicitation principles
 
-### Ask one question at a time
-
-Compound questions produce compound answers that are hard to capture precisely. Ask one thing, get the answer, then ask the next thing.
-
 ### Follow the data
 
-When something is created, changed or sent, ask where it comes from, where it goes, and who can see it. "You said the user receives a confirmation email. Where does the email address come from? Who sends it? What does it contain? What if the send fails?"
-
-### Name ambiguity out loud
-
-"I am not sure what happens here. Let me note this as an open question rather than assume." Voiced ambiguity gets resolved. Silent ambiguity becomes a bug.
+When something is created, changed or sent, ask where it comes from, where it goes, and who can see it. "You said the user receives a confirmation email. Where does the email address come from? What does it contain? What if the send fails?"
 
 ### Work through implications
 
-Every decision has downstream effects. When a choice is made, ask what it implies: "You said invitations expire after 7 days. What happens to the slots that were offered — do they become available again? What does the candidate see when they click an expired link?"
+Every decision has downstream effects. When a choice is made, ask what it implies: "You said invitations expire after 7 days. What happens to the slots that were offered? What does the candidate see when they click an expired link?"
+
+### Name ambiguity out loud
+
+"I am not sure what happens here — let me note this as an open question rather than assume." Voiced ambiguity gets resolved. Silent ambiguity becomes a bug.
 
 ### Make the vocabulary explicit
 
-When a new term appears, pause and define it. "You said 'pipeline' — what do you mean by that in this context?" Add it to the Terminology section. Use it consistently from that point on.
+When a new term appears, pause and define it. "You said 'pipeline' — what do you mean by that in this context?" Add it to Terminology immediately. Use it consistently from that point on. If you catch yourself using two terms for the same concept, resolve it on the spot.
 
 ### Distinguish existing from intended
 
-When the system already exists, ask: "Does the system do this today, or is this how you want it to work?" Both are useful, but they go in different places — existing behaviour is a starting point; intended behaviour is a requirement.
+When the system already exists, ask: "Does the system do this today, or is this how you want it to work?" Both are useful, but they go in different places — existing behaviour is a starting point; intended behaviour is a requirement. Mixing them silently produces a spec that is half-true and half-aspirational.
 
 ---
 
@@ -264,49 +338,54 @@ When the system already exists, ask: "Does the system do this today, or is this 
 
 ### The "and then" trap
 
-Long chains of "and then" without decision points or conditions. Probe every "and then" with "always?" or "only if...?" Most flows have more branches than people initially describe.
+Long chains of "and then" without decision points. Probe every step with "always?" or "only if...?" Most flows have more branches than people initially describe.
 
 ### The "obviously" trap
 
-When someone says "obviously" or "of course", probe. That phrase marks an unstated assumption. "Obviously the admin approves it — but are there cases where approval is automatic? What if the admin is not available?"
+"Obviously" marks an unstated assumption. Probe: "Obviously the admin approves it — are there cases where approval is automatic? What if the admin is unavailable?"
 
 ### The "how" trap
 
-When the conversation drifts into implementation — "we'll use a webhook for that", "the frontend will poll" — redirect. "At the behaviour level, what needs to happen and when? We can capture the how separately."
+When the conversation drifts into implementation — "we'll use a webhook for that", "the frontend will poll" — redirect: "At the behaviour level, what needs to happen and when?"
 
 ### The "one user" trap
 
-Scenarios narrated from the perspective of one archetypal user often miss multi-party interactions. "You described the buyer's journey. Walk me through the same flow from the seller's perspective. At what point do these paths intersect?"
+Scenarios narrated from one actor's perspective miss multi-party interactions. "You described the buyer's journey. Walk me through the same flow from the seller's perspective."
 
 ### The "happy path only" trap
 
-If the session produces only success scenarios, probe explicitly: "What if each step fails?" Error paths are requirements too. They are also where the most important UX and data integrity decisions live.
+If the session produces only success scenarios, probe explicitly for each step: "What happens if this step fails?"
 
 ### The "equivalent terms" trap
 
-Two terms being used for the same concept. Do not note them as equivalent — resolve them. Pick one term, define it, use it everywhere. The other term should not appear again, not even in a "see also" note.
+Two terms for the same concept. Do not annotate as "also known as" — resolve it. Pick one term, define it, use it everywhere. The other term should not appear again.
+
+### The "no source" trap
+
+A business rule without a source ("users cannot do X") that nobody can explain the origin of. Do not include it as a fact. Open a question: "This rule exists in the current system. Do we know where it came from? Is it a legal requirement, a product decision, or something else?"
 
 ---
 
 ## Session structure
 
-**Opening (5 min).** State the goal: "We are capturing how this works and what it must do, not how we will build it." Agree on scope for this session.
+**Opening (5 min).** State the goal. Agree scope for this session.
 
-**Context (10 min).** Why this exists, what problem it solves.
+**Context (10 min).** Why this exists. Verification checkpoint.
 
-**Actors and terminology (15 min).** Who uses it. What the key terms mean. Resolve any conflicts.
+**Actors and terminology (15 min).** Who uses it. Shared vocabulary. Resolve conflicts. Verification checkpoint.
 
-**User stories and scenarios (30 min).** The main flows, happy path first, then edges. Diagram as you go.
+**User stories and scenarios (30 min).** Main flows, happy path first, then branches and failures. Diagram as you go. Contradiction checks throughout. Verification checkpoint after each scenario.
 
-**Domain model (15 min).** Key entities, their states, their relationships.
+**Domain model (15 min).** Key entities, states, relationships. Structured entity cards. Verification checkpoint.
 
-**Requirements and rules (15 min).** Constraints and non-functional requirements.
+**Requirements and rules (15 min).** Constraints, business rules with sources, non-functional thresholds. Verification checkpoint.
 
-**Wrap-up (10 min).** Capture open questions with owners. Record decisions made. Note what to cover in the next session.
+**Wrap-up (10 min).** Open questions with owners and deadlines. Decisions with rationale. What to cover in the next session.
 
 ---
 
 ## References
 
+- [Worked examples](../../references/examples.md) — before/after examples for every section type
 - [Section guide](../../references/section-guide.md) — what each section must contain
 - [Diagram guide](../../references/diagram-guide.md) — Mermaid patterns for flows, states and domain models

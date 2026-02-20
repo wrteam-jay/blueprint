@@ -19,6 +19,19 @@ The gap between what the system **does** and what it **should do** is informatio
 
 ---
 
+## Do not
+
+- **Do not treat code as the spec.** Code is one input. It captures what the system does, including bugs, expedient hacks, and dead code. The blueprint captures what it should do.
+- **Do not include database column names or types.** `user_id: integer`, `deleted_at: timestamp` — these are schema details. Use relationship names and domain concepts.
+- **Do not leave terminology conflicts unresolved.** When you find `purchase` in the code and `order` in the product, pick one and flag the other for cleanup. Do not note both.
+- **Do not write "this may be intentional" and move on.** If you do not know whether behaviour is intentional, open a question. "May be intentional" is not a finding.
+- **Do not spec dead code.** If a code path is never reached in production, it does not belong in the blueprint.
+- **Do not infer intent from implementation alone.** Just because the code does X does not mean X was intended. Validate with people who know the system.
+- **Do not write implementation into the blueprint.** If you write `API`, `database`, `endpoint`, `table`, `component`, `cron`, `queue` — stop and rephrase at the behaviour level.
+- **Do not generate a complete spec from reading code alone.** Distillation requires both code and people. Code reveals what happens; people reveal why and whether it was intended.
+
+---
+
 ## What to read before you start
 
 Before asking any questions or reading any code, establish the scope.

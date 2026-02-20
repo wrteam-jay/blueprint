@@ -114,6 +114,30 @@ Trade-off this panellist tends to underweight: getting the current version right
 
 ---
 
+## Character cards
+
+Short prompts for inhabiting each panellist during a debate. The descriptions above are for understanding the roles; these cards are for speaking as them.
+
+**Product owner:** "I care about outcomes. For every requirement I ask: what user problem does this solve, and would a product manager need to know this to make good decisions? I challenge anything that describes mechanism instead of outcome, and I'm comfortable deferring edge cases that don't affect the core journey."
+
+**Engineer:** "I read specs for what's not said — the hidden complexity, the assumptions about what 'simple' means. When I see 'the system will' without further detail I ask what that actually requires to build. I flag concurrency issues, failure modes and performance implications. My job is not to block requirements but to make sure the team knows what they're signing up for."
+
+**User advocate:** "I insist on evidence. 'Users want X' without research is a hypothesis. I read every user story asking: did we talk to actual users, or did we write this in a meeting room? I represent the person encountering this system cold, for the first time, with no context the team has built up over months."
+
+**Business analyst:** "I know the rules of the business — the constraints, the obligations, the policies. I flag requirements that misunderstand how the business actually works. Every business rule I see, I ask: where does this come from? What policy, regulation or decision created it? Rules without sources can be changed by anyone, and usually are, incorrectly."
+
+**Newcomer:** "I have no prior context. Every term must be defined. Every assumption must be stated. If I have to ask someone on the team what something means, the blueprint has failed. I read as someone who joined today and must understand this system entirely from the document."
+
+**Completeness advocate:** "I hunt for what's missing. For every happy path: what happens when each step fails? For every entity: can it reach every state listed? For every actor: where is their primary scenario? I'm not satisfied until the error paths are as well-specified as the success paths."
+
+**Simplicity advocate:** "I question every sentence. Does this need to be here? Is this constraining the implementation team in a way they did not consciously agree to? Every word in a spec is a commitment. I cut what isn't earning its place, and I'm aggressive about implementation details dressed as requirements."
+
+**Operations advocate:** "I think about 3am when things are broken. What fails? Who finds out? What do they do? For every flow I ask: what happens when this step doesn't complete? Is that documented? I also ask about idempotency — what if this triggers twice? — and about how the team will know when it's broken."
+
+**Continuity advocate:** "I think about this document six months from now, when half the team has changed. Is the rationale captured, or just the decision? Are the open questions owned? Will someone be able to update this without inadvertently breaking something? I value decision logs with reasoning over ones that just record outcomes."
+
+---
+
 ## How the debate works
 
 ### Scope
@@ -123,10 +147,14 @@ The debate protocol applies to both reviews (evaluating an existing blueprint fo
 ### Protocol
 
 1. **Present.** The item is stated with its context: what the issue or proposal is, where it appears, why it matters, and a candidate resolution or proposal.
-2. **Respond.** Each panellist weighs in. Responses should be two to four sentences, concise and in character. "No objection" is a valid response. Panellists should be identified by role name.
-3. **Rebut.** Panellists may respond to each other. Rebuttals should be addressed to a specific panellist and should either resolve the concern or sharpen the disagreement. One round of rebuttals.
-4. **Synthesise.** A neutral summary of where the panel stands after rebuttals. Identifies which concerns were resolved and which remain. Not attributed to any panellist.
-5. **Verdict.** One of four outcomes, based on the state of the debate after synthesis.
+2. **Respond.** Each panellist weighs in. Use the character card format: `**[Role]:** [2-3 sentences in character]`. "No objection." is a valid response. Every panellist must respond to every item.
+3. **Rebut.** Panellists may respond to each other. Rebuttals are addressed to a specific panellist by name and either resolve the concern or sharpen the disagreement. One round only.
+4. **Synthesise.** A neutral summary of where the panel stands. Which concerns were resolved. Which remain. Not attributed to any panellist.
+5. **Verdict.** One of four outcomes based on the state of the debate.
+
+### Quick review mode
+
+For routine fixes, small wording changes, or single-section updates, convene a three-panellist panel instead of the full nine. Use: **product owner**, **engineer**, **user advocate**. These three cover the core tension between what to build, whether it is feasible, and whether it serves real users. Reserve the full nine for significant changes, new features, and contested proposals.
 
 ### Verdicts
 

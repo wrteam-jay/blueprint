@@ -37,10 +37,10 @@ It covers both what the system **does** today and what it **should** do. When th
 4. Terminology    — shared vocabulary; precise definitions for domain terms
 5. User Stories   — who needs what and why
 6. Scenarios      — how things work end-to-end, with diagrams
-7. Domain Model   — entities, their states, their relationships
-8. Requirements   — what the system must do; business rules; constraints
-9. Decision Log   — settled decisions with their rationale
-10. Open Questions — live discussion space
+7. Domain Model   — entities with states, invariants, transitions, and relationships
+8. Requirements   — what the system must do; business rules with sources; constraints
+9. Decision Log   — settled decisions with rationale (not just outcomes)
+10. Open Questions — every question has an owner and a deadline
 11. Changelog     — how this document has evolved
 ```
 
@@ -93,5 +93,7 @@ Implementation details belong in technical design documents. The blueprint belon
 - [Elicitation guide](./skills/elicit/SKILL.md) — build a blueprint through structured conversation
 - [Distillation guide](./skills/distill/SKILL.md) — extract a blueprint from an existing system
 - [Audit guide](./skills/audit/SKILL.md) — review a blueprint for gaps and quality
-- [Section guide](./references/section-guide.md) — what each section must contain
+- [Section guide](./references/section-guide.md) — what each section must contain, including cross-blueprint references
 - [Diagram guide](./references/diagram-guide.md) — Mermaid patterns for flows, states and domain models
+- [Worked examples](./references/examples.md) — before/after examples for every section type
+- [Maintenance guide](./references/maintenance.md) — keeping a blueprint current: staleness signals, review triggers, ownership

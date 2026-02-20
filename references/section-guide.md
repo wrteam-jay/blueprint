@@ -14,8 +14,8 @@ Every blueprint opens with a metadata block:
 **Status:** Draft | Active | Deprecated
 **Version:** 1.0
 **Last updated:** [date]
-**Owners:** [name / team]
-**Related:** [links to related blueprints]
+**Spec owner:** [name — one person, not a team]
+**Related blueprints:** [links, with a one-phrase description of the relationship]
 ```
 
 **Status** signals how trustworthy the document is. Draft = work in progress. Active = the team treats this as authoritative. Deprecated = the system has changed; this no longer reflects reality.
@@ -175,25 +175,40 @@ Group stories by actor or by flow. Each story should be:
 ```markdown
 ### Customer stories
 
-**US-001** As a customer, I want to see all my past orders in one place, so that
-I can track what I've purchased and refer back to past purchases.
+**US-001** [Must Have]
+As a customer, I want to see all my past orders in one place, so that I can track
+what I've purchased and refer back to past purchases.
+*Evidence:* "Where is my order?" is 34% of support ticket volume (Zendesk Q3 2024).
+*Acceptance criteria:* Customer can view the last 24 months of orders without contacting support.
 
-**US-002** As a customer, I want to cancel an order I placed by mistake, so that
-I am not charged for something I do not want.
+**US-002** [Must Have]
+As a customer, I want to cancel an order I placed by mistake, so that I am not
+charged for something I do not want.
+*Evidence:* Exit survey — 12% of churned customers cited inability to self-cancel.
+*Acceptance criteria:* Customer can cancel any order that has not yet reached *processing* status.
 
-**US-003** As a customer, I want to know immediately if my payment fails, so that
-I can resolve the issue without losing my order.
-
-### Fulfilment staff stories
-
-**US-010** As a fulfilment staff member, I want to see all orders in *processing*
-status, so that I can pick and pack in priority order.
+**US-003** [Must Have]
+As a customer, I want to know immediately if my payment fails, so that I can
+resolve the issue without losing my order.
+*Evidence:* Validated in user interviews 2024-10-08 (8/10 participants expected
+immediate notification). Assumption: "immediately" means within 5 minutes — *not yet validated.*
+*Acceptance criteria:* Customer receives payment failure notification within 5 minutes, with a specific reason they can act on.
 ```
+
+**Evidence annotation:**
+Every user story should have an `*Evidence:*` line. This is what grounds the story in reality rather than assumption:
+- Analytics: "accounts for X% of support tickets", "Y% of users do Z"
+- User research: "validated in N interviews on [date]"
+- Observed behaviour: "current system logs show..."
+- Explicit: "assumption: not yet validated" — this is honest and useful. It signals which stories are hypotheses.
+
+A story with no evidence annotation is not necessarily wrong, but it should be marked: `*Evidence:* None — assumption.*`
 
 **What makes a bad story:**
 - No "so that" clause ("As a customer, I want to see my orders")
 - Written from the system's perspective ("The system allows customers to...")
 - Written as a feature ("As a customer, I want a dashboard")
+- No evidence annotation — even "assumption" is better than silence
 - Acceptance criteria so vague they cannot be tested
 
 ---
@@ -263,30 +278,59 @@ Common categories to cover:
 
 ### Entities
 
-Each entity entry:
-- Name and one-sentence definition
-- States (if it has a lifecycle)
-- Key fields (at the business level — not database columns, but what data the entity carries that matters to understanding the system)
-- Relationships (who owns it, what it belongs to, what it contains)
-- Lifecycle owner (who creates it, who can update it, who can delete it)
+Use the structured entity card for every entity. Consistency matters — a model (or a new reader) reading the tenth entity should be able to scan it as fast as the first.
+
+**Entity card format:**
 
 ```markdown
-**Order**
-The record of a customer's purchase intent, from confirmation to fulfilment.
+**Entity: Order**
 
-*States:* pending → confirmed → processing → shipped → delivered | cancelled | returned
+*Definition:* The record of a customer's intent to purchase. Created when the
+customer confirms their cart. Persists through fulfilment regardless of payment outcome.
 
-*Key data:* Line items (products and quantities), delivery address, payment method,
-total amount, placed timestamp.
+*States:*
+- **pending** — created, payment not yet attempted
+- **confirmed** — payment successful, inventory reserved
+- **processing** — fulfilment staff has picked up the order
+- **shipped** — dispatched; tracking reference exists
+- **delivered** — delivery confirmed
+- **cancelled** — abandoned before processing, or cancelled by staff
+- **returned** — customer returned items after delivery
 
-*Relationships:* Belongs to one Customer. Contains one or more LineItems.
-Has one Fulfilment (created when processing begins). May have multiple
-Transactions.
+*Transitions:*
+- pending → confirmed: payment succeeds and inventory reserves
+- pending → cancelled: customer cancels before payment, or payment fails permanently
+- confirmed → processing: fulfilment staff accepts the order
+- confirmed → cancelled: customer cancels before processing begins
+- processing → shipped: items dispatched
+- processing → on_hold: an item is unavailable
+- on_hold → processing: item restocked
+- on_hold → cancelled: item never restocked or customer cancels
+- shipped → delivered: delivery confirmed
+- shipped | delivered → returned: customer initiates return
 
-*Lifecycle:* Created by the customer at checkout. Updated by the Order Processor
-(status), Fulfilment Staff (status, tracking). Cancelled by the Customer
-(before processing) or Fulfilment Staff (if items unavailable).
+*Invariants:*
+- A cancelled order cannot be reactivated
+- An order in processing or later cannot be cancelled by the customer (staff override only)
+- An order must have at least one LineItem
+
+*Relationships:*
+- Belongs to one Customer
+- Contains one or more LineItems
+- Has at most one Fulfilment (created when processing begins)
+- Accumulates Transactions as payment is attempted (0 or more)
+
+*Lifecycle owner:* Created by checkout flow. Status transitions by Order Processor
+(automated), Fulfilment Staff (manual), or Customer (within allowed states).
 ```
+
+**Why this format:**
+- *Definition* — one sentence, not a paragraph. Enough to identify the entity uniquely.
+- *States* — named and described, not just listed. The description is where implicit meaning lives.
+- *Transitions* — explicit trigger for each edge. "confirmed → processing" without a trigger means nobody knows what causes the transition.
+- *Invariants* — constraints that must hold regardless of state. These are the things that must never be violated under any flow.
+- *Relationships* — named and directional. Not "Order has Transactions" but "Order accumulates Transactions as payment is attempted."
+- *Lifecycle owner* — who is responsible for each class of transition. Ambiguous ownership causes double-writes, race conditions and conflicting updates.
 
 ### State diagrams
 
@@ -421,3 +465,72 @@ Open questions without owners do not get resolved. Open questions without "block
 | 1.1 | 2024-11-20 | Added Payment Failure scenario; resolved OQ-001 | [name] |
 | 1.2 | 2024-12-03 | Updated Domain Model after codebase distillation; flagged OQ-002 | [name] |
 ```
+
+See [maintenance guide](./maintenance.md) for what counts as a version bump and how to write changelog entries.
+
+---
+
+## Cross-blueprint references
+
+Real products have multiple blueprints. Entities, terminology and events cross boundaries. This section covers how to handle that cleanly.
+
+### What belongs in each blueprint
+
+A blueprint **owns** an entity if it governs its lifecycle — creation, transitions, deletion. A blueprint **references** an entity if it reads from it or depends on its state but does not change it.
+
+```
+Orders blueprint: owns Order, LineItem, Fulfilment
+Customers blueprint: owns Customer, Address, PaymentMethod
+Notifications blueprint: owns Notification, NotificationPreference
+
+Orders blueprint references: Customer (read-only — gets email, name)
+Notifications blueprint references: Order (reads status to trigger notifications)
+```
+
+Do not re-define entities owned by another blueprint. Reference them with a link.
+
+### How to reference another blueprint's entity
+
+In your Terminology section:
+
+```markdown
+**Customer**
+Defined in the [Customers blueprint](../customers/blueprint.md). For the purposes
+of this blueprint: a registered account that places orders. The Orders blueprint
+reads Customer.email and Customer.name; it does not modify Customer records.
+```
+
+In your Domain Model:
+
+```markdown
+*Relationships:* Belongs to one **Customer** ([Customers blueprint](../customers/blueprint.md)).
+```
+
+### Shared terminology across blueprints
+
+When a term is used across multiple blueprints, define it once in the most authoritative blueprint and reference it elsewhere. Do not copy-paste the definition — it will drift.
+
+If two blueprints define the same term differently: that is a conflict. Resolve it at the product level, update the authoritative definition, and update all references. This is the cross-blueprint equivalent of the single-term rule.
+
+### Consuming vs owning
+
+| Relationship | What it means | How to express it |
+|-------------|---------------|-------------------|
+| **Owns** | This blueprint governs the entity's lifecycle | Defined fully in this blueprint's Domain Model |
+| **References** | This blueprint reads from the entity | Short entry in Terminology with link to owning blueprint |
+| **Triggers** | An event from another blueprint causes behaviour here | Scenario trigger cites the source blueprint |
+| **Emits** | This blueprint produces events another blueprint responds to | Note in scenario end state; document in emitting blueprint |
+
+### Cross-blueprint event dependencies
+
+When one blueprint's behaviour depends on an event from another:
+
+```markdown
+### Subscription Activated (triggered by Billing blueprint)
+
+**Trigger:** Billing blueprint emits `SubscriptionActivated` event
+**Source:** [Billing blueprint](../billing/blueprint.md) — Section 6, Scenario "First Payment"
+...
+```
+
+This makes the dependency explicit and auditable. If the Billing blueprint changes the event, it is clear which downstream blueprints are affected.
