@@ -1,0 +1,19 @@
+{
+  "name": "jayparmar-plugins",
+  "metadata": {
+    "description": "Claude Code plugins by Jay Parmar",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "Jay Parmar"
+  },
+  "plugins": [
+    {
+      "name": "blueprint",
+      "source": ".",
+      "description": "A living product specification skill. Build, review, audit and maintain structured specs for how systems work.",
+      "version": "1.0.0",
+      "keywords": ["blueprint", "specification", "living spec", "product spec"]
+    }
+  ]
+}
