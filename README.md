@@ -11,10 +11,13 @@ A Claude Code skill for building and maintaining a single source of truth about 
 **As a plugin (recommended for sharing):**
 
 ```bash
-# From a marketplace (once published)
-/plugin install blueprint@your-marketplace
+# 1. Add the marketplace
+/plugin marketplace add wrteam-jay/blueprint
 
-# From a local checkout
+# 2. Install the plugin
+/plugin install blueprint@jayparmar-plugins
+
+# Or from a local checkout
 claude --plugin-dir /path/to/blueprint
 ```
 
