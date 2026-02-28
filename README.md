@@ -15,7 +15,7 @@ A Claude Code skill for building and maintaining a single source of truth about 
 /plugin marketplace add wrteam-jay/blueprint
 
 # 2. Install the plugin
-/plugin install blueprint@jayparmar-plugins
+/plugin install blueprint@wrteam-jay
 
 # Or from a local checkout
 claude --plugin-dir /path/to/blueprint
