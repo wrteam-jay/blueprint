@@ -1,0 +1,11 @@
+{
+  "name": "blueprint",
+  "description": "A living product specification skill. Build, review, audit and maintain structured specs for how systems work.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jay Parmar"
+  },
+  "repository": "https://github.com/jayparmar/blueprint",
+  "license": "MIT",
+  "keywords": ["blueprint", "specification", "living spec", "product spec", "system spec"]
+}

@@ -4,11 +4,37 @@
 
 ---
 
-A skill for building and maintaining a single source of truth about a system — how it works today, how it should work, and the shared vocabulary everyone uses to talk about it.
+A Claude Code skill for building and maintaining a single source of truth about a system — how it works today, how it should work, and the shared vocabulary everyone uses to talk about it.
 
-## Get started
+## Install
 
-Once installed in Claude Code, type `/blueprint` to get started. You can also jump to a specific skill:
+**As a plugin (recommended for sharing):**
+
+```bash
+# From a marketplace (once published)
+/plugin install blueprint@your-marketplace
+
+# From a local checkout
+claude --plugin-dir /path/to/blueprint
+```
+
+**As a local skill (for personal use):**
+
+```bash
+# Symlink the skill directory into your global skills
+ln -s /path/to/blueprint/skills/blueprint ~/.claude/skills/blueprint
+
+# Or into a specific project
+ln -s /path/to/blueprint/skills/blueprint /your/project/.claude/skills/blueprint
+```
+
+**Into a project repo (for team use):**
+
+Copy or symlink `skills/blueprint/` into your project's `.claude/skills/` directory and commit it. Anyone who clones the repo gets the skill automatically.
+
+## Usage
+
+Once installed, type `/blueprint` to get started. You can also jump to a specific skill:
 
 - `/blueprint:elicit` — build a spec from scratch through structured conversation
 - `/blueprint:distill` — document an existing system by walking through what it actually does
@@ -88,33 +114,30 @@ orders.blueprint/
 └── changelog.md           # Version history
 ```
 
-## Structure
+## Repo structure
 
 ```
-blueprint/
-├── README.md                             # This file
-├── SKILL.md                              # Main skill — routing, format, core discipline
-├── TEAM.md                               # Review panel — panellists, debate protocol, verdicts
-├── skills/
-│   ├── elicit/
-│   │   └── SKILL.md                      # Build a blueprint from conversation
-│   ├── distill/
-│   │   └── SKILL.md                      # Extract a blueprint from an existing system
-│   ├── review/
-│   │   └── SKILL.md                      # Review panel debate on quality
-│   ├── audit/
-│   │   └── SKILL.md                      # Systematic checklist audit
-│   ├── propose/
-│   │   └── SKILL.md                      # Review panel debate on proposed changes
-│   ├── update/
-│   │   └── SKILL.md                      # Incremental blueprint updates
-│   └── scaffold/
-│       └── SKILL.md                      # Generate directory structure for new blueprint
-└── references/
-    ├── section-guide.md                  # What each section must contain
-    ├── diagram-guide.md                  # Mermaid patterns for flows, states and domain models
-    ├── examples.md                       # Before/after examples for every section type
-    └── maintenance.md                    # Keeping a blueprint current
+blueprint/                                    # Plugin root
+├── .claude-plugin/
+│   └── plugin.json                           # Plugin manifest
+├── README.md                                 # This file
+└── skills/
+    └── blueprint/                            # The skill
+        ├── SKILL.md                          # Main skill — routing, format, core discipline
+        ├── TEAM.md                           # Review panel — panellists, debate protocol, verdicts
+        ├── skills/
+        │   ├── elicit/SKILL.md               # Build a blueprint from conversation
+        │   ├── distill/SKILL.md              # Extract a blueprint from an existing system
+        │   ├── review/SKILL.md               # Review panel debate on quality
+        │   ├── audit/SKILL.md                # Systematic checklist audit
+        │   ├── propose/SKILL.md              # Review panel debate on proposed changes
+        │   ├── update/SKILL.md               # Incremental blueprint updates
+        │   └── scaffold/SKILL.md             # Generate directory structure for new blueprint
+        └── references/
+            ├── section-guide.md              # What each section must contain
+            ├── diagram-guide.md              # Mermaid patterns for flows, states and domain models
+            ├── examples.md                   # Before/after examples for every section type
+            └── maintenance.md                # Keeping a blueprint current
 ```
 
 ## License
