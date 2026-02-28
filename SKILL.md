@@ -3,7 +3,7 @@ name: blueprint
 description: A living product specification skill. Use when you want to document how a system works, capture user stories and flows, build shared vocabulary, discuss existing functionality, or create a single source of truth for a feature or product area.
 version: 1
 auto_trigger:
-  - file_patterns: ["**/*.blueprint.md", "**/blueprint.md"]
+  - file_patterns: ["**/*.blueprint/README.md", "**/*.blueprint/**/*.md"]
   - keywords: ["blueprint", "living spec", "product spec", "system spec", "document how this works", "single source of truth", "spec this out"]
 ---
 
@@ -26,7 +26,11 @@ It covers both what the system **does** today and what it **should** do. When th
 |------|-------|------|
 | Building a spec from scratch | `elicit` | You are describing a new feature or system and need to capture it |
 | Documenting existing functionality | `distill` | The system exists but is not documented; you want to understand and capture what it does |
-| Reviewing a blueprint for gaps | `audit` | You have a blueprint and want to stress-test it for missing flows, terminology conflicts and coverage gaps |
+| Reviewing a blueprint for quality | `review` | You have a blueprint and want the review panel to debate its clarity and completeness |
+| Auditing a blueprint for gaps | `audit` | You want a systematic checklist audit — six dimensions, structured findings report |
+| Evaluating a proposed change | `propose` | You want the review panel to evaluate a new feature, behaviour change or rule modification |
+| Updating an existing blueprint | `update` | The system has changed and the blueprint needs to reflect it |
+| Scaffolding a new blueprint | `scaffold` | You want to create the directory structure for a new blueprint with placeholder files |
 
 ## What a blueprint contains
 
@@ -44,6 +48,27 @@ It covers both what the system **does** today and what it **should** do. When th
 11. Changelog     — how this document has evolved
 ```
 
+## Scope sizing
+
+A single blueprint should cover one cohesive area. Consider splitting when you see:
+
+- **>20 terms** in the Terminology section — the domain is likely covering multiple bounded contexts
+- **>10 scenarios** with disconnected actors — if actor groups do not overlap, they may belong in separate blueprints
+- **Unrelated entity clusters** — if the domain model has groups of entities with no relationships between them, those are separate domains
+- **Disconnected actor groups** — actors who never appear in the same scenario are likely working in different systems
+
+When in doubt, start with one blueprint and split when the size makes targeted updates difficult.
+
+## Completion tiers
+
+Not every blueprint needs to be complete on day one. Tiers describe how much has been captured.
+
+- **Tier 1 (Skeleton):** Context, Scope, Actors, Terminology — enough to align on vocabulary and boundaries
+- **Tier 2 (Workable):** + User Stories, primary Scenarios, Domain Model — enough to start implementation discussions
+- **Tier 3 (Authoritative):** + Error scenarios, Requirements with sources, Decision log — the single source of truth the whole team relies on
+
+State the current tier in the `README.md` manifest so readers know what to expect.
+
 ## The core discipline
 
 A blueprint describes **observable behaviour**, not implementation. It says what happens — not which database stores it, which API returns it, or which component renders it.
@@ -59,7 +84,37 @@ The test for every detail: **"Would someone need to know this to understand how 
 
 Implementation details belong in technical design documents. The blueprint belongs to the whole team — product, engineering, support, design — not just engineering.
 
-## Quick format
+## Blueprint output format
+
+A blueprint is a directory, not a single file. Each section lives in its own file. This keeps individual files small enough for targeted loading and precise edits.
+
+```
+[name].blueprint/
+├── README.md              # Manifest: header block, section index, status
+├── context.md             # Section 1: Context
+├── scope.md               # Section 2: Scope
+├── actors.md              # Section 3: Actors & Roles
+├── terminology.md         # Section 4: Terminology
+├── stories.md             # Section 5: User Stories
+├── scenarios/             # Section 6: Scenarios & Flows
+│   ├── _index.md          # Scenario index with one-line summaries
+│   ├── [scenario-name].md # One file per scenario
+│   └── ...
+├── domain-model.md        # Section 7: Domain Model
+├── requirements.md        # Section 8: Requirements
+├── decisions.md           # Section 9: Decision Log
+├── questions.md           # Section 10: Open Questions
+└── changelog.md           # Section 11: Changelog
+```
+
+### Why a directory
+
+- **Targeted loading.** When updating terminology, only `terminology.md` enters the context — not the entire spec.
+- **Scenarios get their own directory** because they are the largest section and grow independently. Each scenario is its own file. The `_index.md` gives a scannable overview.
+- **Smaller files = better edits.** The LLM reads one focused file, makes precise changes, fewer hallucinations.
+- **Cross-referencing works.** Files link to each other with relative paths (`see [Order Placement](./scenarios/order-placement.md)`).
+
+### README.md manifest
 
 ```markdown
 # Blueprint: [Name]
@@ -67,32 +122,46 @@ Implementation details belong in technical design documents. The blueprint belon
 **Status:** Draft | Active | Deprecated
 **Version:** 1.0
 **Last updated:** [date]
-**Owners:** [names]
-**Related:** [links to related blueprints]
+**Spec owner:** [name — one person, not a team]
+**Related blueprints:** [links with one-phrase description]
 
 ---
 
-## 1. Context
-## 2. Scope
-## 3. Actors & Roles
-## 4. Terminology
-## 5. User Stories
-## 6. Scenarios & Flows
-## 7. Domain Model
-## 8. Requirements
-   ### 8.1 Functional Requirements
-   ### 8.2 Business Rules
-   ### 8.3 Non-Functional Requirements
-## 9. Decision Log
-## 10. Open Questions
-## 11. Changelog
+## Sections
+
+| # | Section | File | Status |
+|---|---------|------|--------|
+| 1 | Context | [context.md](./context.md) | Complete |
+| 2 | Scope | [scope.md](./scope.md) | Complete |
+| 3 | Actors & Roles | [actors.md](./actors.md) | Complete |
+| 4 | Terminology | [terminology.md](./terminology.md) | Complete |
+| 5 | User Stories | [stories.md](./stories.md) | Draft |
+| 6 | Scenarios & Flows | [scenarios/](./scenarios/_index.md) | Draft |
+| 7 | Domain Model | [domain-model.md](./domain-model.md) | Draft |
+| 8 | Requirements | [requirements.md](./requirements.md) | Pending |
+| 9 | Decision Log | [decisions.md](./decisions.md) | Active |
+| 10 | Open Questions | [questions.md](./questions.md) | Active |
+| 11 | Changelog | [changelog.md](./changelog.md) | Active |
+
+## Completion tier
+
+**Current: [Tier]** — [brief description of what has been captured and what remains]
 ```
 
 ## References
 
-- [Elicitation guide](./skills/elicit/SKILL.md) — build a blueprint through structured conversation
-- [Distillation guide](./skills/distill/SKILL.md) — extract a blueprint from an existing system
-- [Audit guide](./skills/audit/SKILL.md) — review a blueprint for gaps and quality
+### Sub-skills
+
+- [Elicit](./skills/elicit/SKILL.md) — build a blueprint through structured conversation
+- [Distill](./skills/distill/SKILL.md) — extract a blueprint from an existing system
+- [Review](./skills/review/SKILL.md) — convene the review panel to debate clarity and completeness
+- [Audit](./skills/audit/SKILL.md) — systematic checklist audit across six dimensions
+- [Propose](./skills/propose/SKILL.md) — convene the review panel to evaluate a proposed change
+- [Update](./skills/update/SKILL.md) — incrementally update a blueprint after system changes
+- [Scaffold](./skills/scaffold/SKILL.md) — generate the directory structure for a new blueprint
+
+### Reference guides
+
 - [Section guide](./references/section-guide.md) — what each section must contain, including cross-blueprint references
 - [Diagram guide](./references/diagram-guide.md) — Mermaid patterns for flows, states and domain models
 - [Worked examples](./references/examples.md) — before/after examples for every section type

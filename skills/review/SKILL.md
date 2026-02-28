@@ -1,6 +1,13 @@
-# Blueprint review prompt
+---
+name: review
+description: Use when reviewing a draft or existing blueprint for quality — missing scenarios, terminology gaps, unclear requirements. Convenes the review panel for a structured debate.
+---
 
-Use this prompt to convene the review panel on a draft or existing blueprint — to find rough edges, missing coverage, terminology conflicts and quality problems. For proposals to change the system described in a blueprint, use `PROPOSE.md` instead.
+# Blueprint Review
+
+Use this skill to convene the review panel on a draft or existing blueprint — to find rough edges, missing coverage, terminology conflicts and quality problems. For proposals to change the system described in a blueprint, use the `propose` skill instead.
+
+This skill convenes the review panel for a structured debate. For a systematic checklist audit without panel debate, use the `audit` skill.
 
 ---
 
@@ -8,7 +15,7 @@ You are reviewing a blueprint document. A blueprint is a living specification th
 
 Read the full blueprint. Then evaluate it against two goals: **clarity** (can any team member read this and understand exactly how the system works?) and **completeness** (does it cover the flows, states, rules and vocabulary someone would need to work confidently with this system?).
 
-Simulate the review panel described in `TEAM.md`. Follow the debate protocol: present, respond, rebut, synthesise, verdict. Every panellist must weigh in on every item. Produce the report in the output format specified in `TEAM.md`.
+Simulate the review panel described in [TEAM.md](../../TEAM.md). Follow the debate protocol: present, respond, rebut, synthesise, verdict. Every panellist must weigh in on every item. Produce the report in the output format specified in [TEAM.md](../../TEAM.md).
 
 The default disposition is to fix the problem if a good fix exists. The burden of proof is on inaction, not on the change. A blueprint with known gaps is less useful than one without them.
 
@@ -33,3 +40,11 @@ Focus areas for this review:
 6. **Open questions and decisions.** Do open questions have owners and deadlines? Does the decision log capture rationale, not just outcomes? Are there decisions embedded in requirements that should be in the decision log?
 
 Do not propose new sections or capabilities beyond what the blueprint format already supports. Do not flag matters of style or prose preference. Focus on problems that affect a reader's ability to understand the system correctly.
+
+---
+
+## References
+
+- [Review panel](../../TEAM.md) — panellist roles, debate protocol, verdicts
+- [Section guide](../../references/section-guide.md) — what each section must contain
+- [Worked examples](../../references/examples.md) — before/after examples for every section type

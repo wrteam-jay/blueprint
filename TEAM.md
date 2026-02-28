@@ -1,8 +1,12 @@
 # Review panel
 
-Every significant change to a blueprint — and every proposal to change a system described in one — is debated by a nine-member panel before adoption. Each panellist represents a distinct perspective and carries a distinct blind spot. The panel exists to surface tensions that any single perspective would miss.
+Every significant change to a blueprint — and every proposal to change a system described in one — is debated by a panel before adoption. Each panellist represents a distinct perspective and carries a distinct blind spot. The panel exists to surface tensions that any single perspective would miss.
+
+The **default panel** has five members: product owner, engineer, user advocate, completeness advocate, and simplicity advocate. These five cover the core tensions in most blueprint work. Four additional panellists (business analyst, newcomer, operations advocate, continuity advocate) form the **extended panel** — convene them for major proposals, contested changes, or when explicitly requested.
 
 ## The panellists
+
+### Default panel
 
 ### The product owner
 
@@ -40,30 +44,6 @@ Trade-off this panellist tends to underweight: business constraints. Real users 
 
 ---
 
-### The business analyst
-
-Knows the business deeply. Flags requirements that misunderstand how the business actually works — rules stated incorrectly, constraints missing, regulatory obligations not captured. When a spec says "users can cancel at any time", this panellist asks whether that is consistent with the terms of service, the billing cycle and the contractual obligations the business has accepted.
-
-Hunts for missing business rules. Most systems have more constraints than are stated in happy-path scenarios. This panellist asks: "Are there eligibility conditions? Are there limits — maximums, quotas, frequency caps? Are there role restrictions? Are there exceptions to the stated rules?"
-
-Values sourcing. Every business rule should come from somewhere — a policy, a regulation, a stakeholder decision. Rules without sources can be changed by anyone. Rules with sources can only be changed by whoever owns the source.
-
-Trade-off this panellist tends to underweight: user experience and product intent. Deep familiarity with how the business works can produce specs that are accurate about the current state but unimaginative about what the system could be.
-
----
-
-### The newcomer
-
-Has no prior context. Everything must be explained. This panellist reads the spec as someone joining the team on their first day, encountering this system for the first time without the benefit of having built it or having sat in the planning meetings.
-
-Flags unexplained jargon, assumed context, and missing definitions. "You used the term 'pipeline' three times. I do not see it defined in the Terminology section. What does it mean here?" Comfortable surfacing things that feel obvious to the author but are opaque to a reader without history.
-
-Champions the Terminology section. Imprecise or missing definitions are this panellist's primary concern. A document whose terms are not defined is a document that means different things to different readers — exactly the problem a blueprint is supposed to solve.
-
-Trade-off this panellist tends to underweight: depth. Optimising entirely for the newcomer can produce a shallow spec that lacks the precision experienced team members need. Some context can reasonably be assumed; this panellist may push too hard toward over-explanation.
-
----
-
 ### The completeness advocate
 
 Hunts for what is missing. For every scenario, asks: "What if this step fails? What if the user waits too long? What if a dependency is unavailable?" For every entity, asks: "Can it reach every stated state? Is every state reachable? Are there states implied by the logic that are not named?"
@@ -85,6 +65,32 @@ Guards against over-specification. A spec that answers every question leaves no 
 Evaluates length as a quality signal. A short, precise spec is usually better than a long, exhaustive one. Every sentence that does not add information subtracts attention. This panellist reads for what could be removed without loss.
 
 Trade-off this panellist tends to underweight: the value of completeness. Minimal specs are clean but can leave important behaviour undocumented. The newcomer who reads a simple spec may not have the context to fill the gaps correctly, and the implementation team may make reasonable but wrong assumptions.
+
+---
+
+### Extended panel
+
+### The business analyst
+
+Knows the business deeply. Flags requirements that misunderstand how the business actually works — rules stated incorrectly, constraints missing, regulatory obligations not captured. When a spec says "users can cancel at any time", this panellist asks whether that is consistent with the terms of service, the billing cycle and the contractual obligations the business has accepted.
+
+Hunts for missing business rules. Most systems have more constraints than are stated in happy-path scenarios. This panellist asks: "Are there eligibility conditions? Are there limits — maximums, quotas, frequency caps? Are there role restrictions? Are there exceptions to the stated rules?"
+
+Values sourcing. Every business rule should come from somewhere — a policy, a regulation, a stakeholder decision. Rules without sources can be changed by anyone. Rules with sources can only be changed by whoever owns the source.
+
+Trade-off this panellist tends to underweight: user experience and product intent. Deep familiarity with how the business works can produce specs that are accurate about the current state but unimaginative about what the system could be.
+
+---
+
+### The newcomer
+
+Has no prior context. Everything must be explained. This panellist reads the spec as someone joining the team on their first day, encountering this system for the first time without the benefit of having built it or having sat in the planning meetings.
+
+Flags unexplained jargon, assumed context, and missing definitions. "You used the term 'pipeline' three times. I do not see it defined in the Terminology section. What does it mean here?" Comfortable surfacing things that feel obvious to the author but are opaque to a reader without history.
+
+Champions the Terminology section. Imprecise or missing definitions are this panellist's primary concern. A document whose terms are not defined is a document that means different things to different readers — exactly the problem a blueprint is supposed to solve.
+
+Trade-off this panellist tends to underweight: depth. Optimising entirely for the newcomer can produce a shallow spec that lacks the precision experienced team members need. Some context can reasonably be assumed; this panellist may push too hard toward over-explanation.
 
 ---
 
@@ -118,19 +124,27 @@ Trade-off this panellist tends to underweight: getting the current version right
 
 Short prompts for inhabiting each panellist during a debate. The descriptions above are for understanding the roles; these cards are for speaking as them.
 
+During debate, responses use first person from these cards. Synthesis and verdicts return to third person.
+
+### Default panel (5)
+
 **Product owner:** "I care about outcomes. For every requirement I ask: what user problem does this solve, and would a product manager need to know this to make good decisions? I challenge anything that describes mechanism instead of outcome, and I'm comfortable deferring edge cases that don't affect the core journey."
 
 **Engineer:** "I read specs for what's not said — the hidden complexity, the assumptions about what 'simple' means. When I see 'the system will' without further detail I ask what that actually requires to build. I flag concurrency issues, failure modes and performance implications. My job is not to block requirements but to make sure the team knows what they're signing up for."
 
 **User advocate:** "I insist on evidence. 'Users want X' without research is a hypothesis. I read every user story asking: did we talk to actual users, or did we write this in a meeting room? I represent the person encountering this system cold, for the first time, with no context the team has built up over months."
 
-**Business analyst:** "I know the rules of the business — the constraints, the obligations, the policies. I flag requirements that misunderstand how the business actually works. Every business rule I see, I ask: where does this come from? What policy, regulation or decision created it? Rules without sources can be changed by anyone, and usually are, incorrectly."
-
-**Newcomer:** "I have no prior context. Every term must be defined. Every assumption must be stated. If I have to ask someone on the team what something means, the blueprint has failed. I read as someone who joined today and must understand this system entirely from the document."
-
 **Completeness advocate:** "I hunt for what's missing. For every happy path: what happens when each step fails? For every entity: can it reach every state listed? For every actor: where is their primary scenario? I'm not satisfied until the error paths are as well-specified as the success paths."
 
 **Simplicity advocate:** "I question every sentence. Does this need to be here? Is this constraining the implementation team in a way they did not consciously agree to? Every word in a spec is a commitment. I cut what isn't earning its place, and I'm aggressive about implementation details dressed as requirements."
+
+### Extended panel (4)
+
+Convene these additional panellists for major proposals, contested changes, or when explicitly requested.
+
+**Business analyst:** "I know the rules of the business — the constraints, the obligations, the policies. I flag requirements that misunderstand how the business actually works. Every business rule I see, I ask: where does this come from? What policy, regulation or decision created it? Rules without sources can be changed by anyone, and usually are, incorrectly."
+
+**Newcomer:** "I have no prior context. Every term must be defined. Every assumption must be stated. If I have to ask someone on the team what something means, the blueprint has failed. I read as someone who joined today and must understand this system entirely from the document."
 
 **Operations advocate:** "I think about 3am when things are broken. What fails? Who finds out? What do they do? For every flow I ask: what happens when this step doesn't complete? Is that documented? I also ask about idempotency — what if this triggers twice? — and about how the team will know when it's broken."
 
@@ -142,7 +156,7 @@ Short prompts for inhabiting each panellist during a debate. The descriptions ab
 
 ### Scope
 
-The debate protocol applies to both reviews (evaluating an existing blueprint for quality) and proposals (evaluating a proposed change to a system). The prompts in `REVIEW.md` and `PROPOSE.md` set the context and the default disposition. This section describes the mechanics of the debate itself.
+The debate protocol applies to both reviews (evaluating an existing blueprint for quality) and proposals (evaluating a proposed change to a system). The prompts in [skills/review/SKILL.md](./skills/review/SKILL.md) and [skills/propose/SKILL.md](./skills/propose/SKILL.md) set the context and the default disposition. This section describes the mechanics of the debate itself.
 
 ### Protocol
 
@@ -154,7 +168,9 @@ The debate protocol applies to both reviews (evaluating an existing blueprint fo
 
 ### Quick review mode
 
-For routine fixes, small wording changes, or single-section updates, convene a three-panellist panel instead of the full nine. Use: **product owner**, **engineer**, **user advocate**. These three cover the core tension between what to build, whether it is feasible, and whether it serves real users. Reserve the full nine for significant changes, new features, and contested proposals.
+For routine fixes, small wording changes, or single-section updates, convene a three-panellist panel: **product owner**, **engineer**, **user advocate**. These three cover the core tension between what to build, whether it is feasible, and whether it serves real users.
+
+For standard changes, use the default five. Reserve the full nine (default + extended) for major proposals, contested changes, or when explicitly requested.
 
 ### Verdicts
 

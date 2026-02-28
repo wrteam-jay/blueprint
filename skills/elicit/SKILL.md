@@ -20,7 +20,7 @@ These are the most common ways elicitation goes wrong. Check against this list b
 - **Do not define a term using that term in the definition.** Circular definitions give the reader nothing.
 - **Do not write a business rule without a source.** If you cannot name the policy, regulation or decision that created the rule, mark it as an open question.
 - **Do not infer a missing actor — ask.** "The system sends an email" has a missing actor. Who or what triggers the send?
-- **Do not write implementation into the blueprint.** If you write the words `API`, `database`, `endpoint`, `table`, `component`, `Redis`, `SQL`, `webhook handler`, `cron job`, `microservice` — stop and rephrase at the behaviour level.
+- **Do not write implementation into the blueprint.** Rephrase at the behaviour level. See the [core discipline](../../SKILL.md#the-core-discipline) for the test and examples.
 - **Do not fill an open question with an assumption.** If you do not know something, open a question and assign it. Do not invent an answer to keep moving.
 - **Do not proceed past a phase without a verification checkpoint.** Show captures, get confirmation, then continue.
 - **Do not leave a contradiction silently in the document.** Surface it immediately when you detect it.
@@ -113,7 +113,7 @@ Out-of-scope is as important as in-scope. Get both lists before proceeding.
 **"Are there related systems or features we should know about but not specify here?"**
 Establishes boundaries and identifies related blueprints to reference.
 
-Capture at the top of the document before any other section:
+Capture this in the blueprint's `context.md` and `scope.md` files:
 
 ```markdown
 **About:** [one sentence]
@@ -125,6 +125,8 @@ Capture at the top of the document before any other section:
 ---
 
 ## Elicitation phases
+
+Phases are numbered for reference, not prescription. The order can adapt to the conversation — some sessions start with terminology because that is what is most contested; others start with scenarios because that is what stakeholders are most ready to discuss. Verification checkpoints and contradiction checks are the invariants; sequence is default.
 
 ### Phase 1: Context
 
@@ -138,7 +140,7 @@ Capture at the top of the document before any other section:
 
 **Verification checkpoint:** "Here's the context I've captured: [show paragraph]. Does this accurately describe the problem and why this exists?"
 
-**Output:** A Context section a new team member could read to understand why this feature exists.
+**Output:** Write `context.md` — a new team member could read it to understand why this feature exists.
 
 **Watch for:** Features described in terms of their solution ("we need a dashboard"). Redirect: "What decisions does someone currently make without enough information?"
 
@@ -175,7 +177,7 @@ For each key term, write a precise one-sentence definition. Not a dictionary def
 
 **Verification checkpoint:** "Here are the terms I've defined: [show glossary]. Are the definitions accurate? Are there terms we use that aren't here?"
 
-**Resolution rule:** When two terms exist for the same concept, resolve it now. Pick one. Define it. The other term should not appear anywhere in the document — not even in a "see also" note. Terminology conflicts that survive into implementation become two models, two join tables, two sources of confusion.
+**Resolution rule:** When two terms exist for the same concept, resolve it now. Pick one. Define it. The other term should not appear in the document. See [Section 4 of the section guide](../../references/section-guide.md#4-terminology) for the full resolution rule.
 
 **Watch for:**
 - Two words for the same concept ("booking" and "reservation")
@@ -251,16 +253,7 @@ After tracing multiple flows: "Do any of these flows make assumptions about the 
 5. "Who creates [entity]? Who can change it? Who can delete it?"
 6. "What must always be true about [entity], regardless of state?"
 
-Use the structured entity card format for each entity:
-
-```
-Entity: [Name]
-Definition: [One sentence]
-States: state1 → state2 | terminal_state
-Invariants: [What must always be true]
-Relationships: [belongs to X, contains Y (0+), has one Z]
-Lifecycle owner: [who creates, transitions, deletes]
-```
+Use the structured entity card format for each entity — see [Section 7 of the section guide](../../references/section-guide.md#7-domain-model) for the full format.
 
 **Verification checkpoint:** "Here is the domain model: [show entities]. Do the states look right? Are any entities missing? Any relationships wrong?"
 
@@ -306,7 +299,7 @@ For every rule: **name its source**. The policy, regulation or stakeholder decis
 - "We decided [X]. The reason was [Y]. Let me record that so it does not get re-debated."
 - Include: what was decided, why, who decided it, what alternatives were considered
 
-Every open question must have an owner and a deadline. Ownerless questions do not get resolved.
+Every open question must have an owner and a deadline — see [Section 10 of the section guide](../../references/section-guide.md#10-open-questions).
 
 ---
 
@@ -366,21 +359,17 @@ A business rule without a source ("users cannot do X") that nobody can explain t
 
 ---
 
-## Session structure
+## Closing checklist
 
-**Opening (5 min).** State the goal. Agree scope for this session.
+Before ending any session:
 
-**Context (10 min).** Why this exists. Verification checkpoint.
-
-**Actors and terminology (15 min).** Who uses it. Shared vocabulary. Resolve conflicts. Verification checkpoint.
-
-**User stories and scenarios (30 min).** Main flows, happy path first, then branches and failures. Diagram as you go. Contradiction checks throughout. Verification checkpoint after each scenario.
-
-**Domain model (15 min).** Key entities, states, relationships. Structured entity cards. Verification checkpoint.
-
-**Requirements and rules (15 min).** Constraints, business rules with sources, non-functional thresholds. Verification checkpoint.
-
-**Wrap-up (10 min).** Open questions with owners and deadlines. Decisions with rationale. What to cover in the next session.
+- [ ] Verification checkpoint shown for every section captured in this session
+- [ ] All contradictions surfaced and either resolved or logged as open questions
+- [ ] Every open question has an owner and a deadline (or a note on what it blocks)
+- [ ] Every decision made during the session is in the decision log with rationale
+- [ ] Changelog updated if any meaningful changes were made
+- [ ] README.md manifest updated with current section statuses
+- [ ] Next session scope agreed (what remains to capture)
 
 ---
 

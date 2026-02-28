@@ -7,7 +7,11 @@ description: Use when reviewing an existing blueprint for gaps, missing flows, t
 
 This skill reviews an existing blueprint for quality, completeness and consistency. The output is a structured report of specific findings — not a rewrite. Each finding names the problem, locates it in the document, states why it matters, and describes what a fix would look like.
 
+This is a structured checklist audit — it evaluates systematically against six dimensions and produces a findings report. For a panel debate with multiple perspectives, use the `review` skill.
+
 Read the entire blueprint before producing any findings. Isolated observations often disappear when the document is read as a whole; apparent gaps may be covered elsewhere.
+
+**Completion tier awareness:** Check the blueprint's stated completion tier (in the README.md manifest) before auditing. A Tier 1 (Skeleton) blueprint intentionally lacks scenarios, domain model, and requirements — do not flag these as missing. Audit against what the tier promises, and note where the blueprint falls short of its stated tier.
 
 ---
 
@@ -208,3 +212,10 @@ the blueprint is treated as authoritative), [W] are advisory.
 - Terminology that could be clearer but is not ambiguous
 - Missing rationale for decisions that are unlikely to be revisited
 - Minor implementation leakage that does not constrain engineering meaningfully
+
+---
+
+## References
+
+- [Section guide](../../references/section-guide.md) — what each section must contain
+- [Diagram guide](../../references/diagram-guide.md) — Mermaid patterns for flows, states and domain models

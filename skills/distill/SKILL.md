@@ -27,7 +27,7 @@ The gap between what the system **does** and what it **should do** is informatio
 - **Do not write "this may be intentional" and move on.** If you do not know whether behaviour is intentional, open a question. "May be intentional" is not a finding.
 - **Do not spec dead code.** If a code path is never reached in production, it does not belong in the blueprint.
 - **Do not infer intent from implementation alone.** Just because the code does X does not mean X was intended. Validate with people who know the system.
-- **Do not write implementation into the blueprint.** If you write `API`, `database`, `endpoint`, `table`, `component`, `cron`, `queue` — stop and rephrase at the behaviour level.
+- **Do not write implementation into the blueprint.** Rephrase at the behaviour level. See the [core discipline](../../SKILL.md#the-core-discipline) for the test and examples.
 - **Do not generate a complete spec from reading code alone.** Distillation requires both code and people. Code reveals what happens; people reveal why and whether it was intended.
 
 ---
@@ -103,7 +103,7 @@ Before capturing anything in the blueprint format, understand the landscape.
 - "What would you want a new team member to know about this?"
 - "What breaks most often, and why?"
 
-Produce a rough map before any blueprint sections:
+Produce a rough map before writing any blueprint section files:
 
 ```
 Entry points:
@@ -217,6 +217,20 @@ Distillation reveals:
 **Stale documentation** — existing docs that describe behaviour the system no longer has, or vice versa. Flag and update.
 
 **Technical debt visible at the spec level** — not implementation debt, but behavioural debt. The system does something in two different ways for historical reasons. The blueprint surfaces this, and the team can decide whether to reconcile it.
+
+---
+
+## Output format
+
+Distillation produces a blueprint directory — one file per section. Each step in the distillation process writes its corresponding section file:
+
+- Step 2 (terminology) → `terminology.md`
+- Step 3 (entities and states) → `domain-model.md`
+- Step 4 (flows) → `scenarios/` directory with one file per flow and `_index.md`
+- Step 5 (walk scenarios) → updates to scenario files and `questions.md`
+- Step 6 (gaps and questions) → `questions.md` and `decisions.md`
+
+Context, scope, actors, stories, and requirements are captured throughout and written to their respective files. Update the `README.md` manifest and `changelog.md` at the end.
 
 ---
 

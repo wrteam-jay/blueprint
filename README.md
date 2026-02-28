@@ -8,11 +8,15 @@ A skill for building and maintaining a single source of truth about a system —
 
 ## Get started
 
-Once installed in Claude Code, type `/blueprint` to get started. You can also jump to a specific mode:
+Once installed in Claude Code, type `/blueprint` to get started. You can also jump to a specific skill:
 
 - `/blueprint:elicit` — build a spec from scratch through structured conversation
 - `/blueprint:distill` — document an existing system by walking through what it actually does
-- `/blueprint:audit` — review an existing blueprint for gaps, conflicts and quality issues
+- `/blueprint:review` — convene the review panel to debate a blueprint's clarity and completeness
+- `/blueprint:audit` — run a systematic checklist audit across six quality dimensions
+- `/blueprint:propose` — convene the review panel to evaluate a proposed change
+- `/blueprint:update` — incrementally update a blueprint after a system change
+- `/blueprint:scaffold` — generate the directory structure for a new blueprint
 
 ## What problem this solves
 
@@ -23,7 +27,7 @@ Every product team runs into the same friction:
 - **No shared reference.** Discussions about changes require reconstructing context from memory, tickets and code. Disagreements about "how it works" are hard to resolve without a canonical source.
 - **Intent vs reality gap.** Code captures what the system does, including bugs and expedient decisions. There is no lightweight way to see what it was *meant* to do.
 
-A blueprint is the answer to all of these. One document. The whole team maintains it. When someone asks "how does X work?", the answer is "check the blueprint."
+A blueprint is the answer to all of these. A directory of focused files. The whole team maintains it. When someone asks "how does X work?", the answer is "check the blueprint."
 
 ## What a blueprint is
 
@@ -46,30 +50,71 @@ A living specification — not a one-time approval document, but a persistent re
 - A one-time deliverable (it is maintained, not filed)
 - A substitute for code review or testing
 
-## Three ways to use it
+## How to use it
 
-**Elicit** — you are specifying something new. Walk through it as a structured conversation: context, actors, terminology, stories, flows, domain model, requirements. End with a complete spec and a list of open questions.
+**Scaffold** — start a new blueprint. Generates the directory structure with placeholder files and inline hints for each section.
+
+**Elicit** — you are specifying something new. Walk through it as a structured conversation: context, actors, terminology, stories, flows, domain model, requirements. Each phase produces its corresponding section file.
 
 **Distill** — the system exists but is not documented. Walk through the code and existing knowledge to capture what it actually does. Surface the implicit state machines, name the undocumented decisions, resolve the terminology conflicts.
 
-**Audit** — you have a spec and want to stress-test it. Check for missing flows, terminology conflicts, untestable requirements, entities with unreachable states, decisions without rationale.
+**Review** — convene the review panel (5 or 9 panellists) to debate a blueprint's clarity and completeness. The panel surfaces tensions that any single perspective would miss.
+
+**Audit** — run a systematic checklist audit across six dimensions: terminology, scenario coverage, domain model, requirements quality, decision log, and implementation leakage. Produces a structured findings report.
+
+**Propose** — evaluate a proposed change (new feature, behaviour change, rule modification) against the existing blueprint. The review panel debates coherence and value.
+
+**Update** — the system has changed. Read only the affected section files, make targeted edits, update the changelog and decisions.
+
+## Multi-file format
+
+Blueprints are directories, not single files. Each section lives in its own file for targeted loading and precise edits.
+
+```
+orders.blueprint/
+├── README.md              # Manifest: header, section index, completion tier
+├── context.md             # Why this exists
+├── scope.md               # What is covered and what is not
+├── actors.md              # Who interacts with the system
+├── terminology.md         # Shared vocabulary
+├── stories.md             # User stories with evidence
+├── scenarios/             # One file per scenario
+│   ├── _index.md          # Scenario index with summaries
+│   └── ...
+├── domain-model.md        # Entities, states, relationships
+├── requirements.md        # Functional, business rules, non-functional
+├── decisions.md           # Settled decisions with rationale
+├── questions.md           # Unresolved items with owners
+└── changelog.md           # Version history
+```
 
 ## Structure
 
 ```
 blueprint/
-├── README.md
-├── SKILL.md                          # Main skill — routing, format, core discipline
+├── README.md                             # This file
+├── SKILL.md                              # Main skill — routing, format, core discipline
+├── TEAM.md                               # Review panel — panellists, debate protocol, verdicts
 ├── skills/
 │   ├── elicit/
-│   │   └── SKILL.md                  # Build a blueprint from conversation
+│   │   └── SKILL.md                      # Build a blueprint from conversation
 │   ├── distill/
-│   │   └── SKILL.md                  # Extract a blueprint from an existing system
-│   └── audit/
-│       └── SKILL.md                  # Review a blueprint for gaps and quality
+│   │   └── SKILL.md                      # Extract a blueprint from an existing system
+│   ├── review/
+│   │   └── SKILL.md                      # Review panel debate on quality
+│   ├── audit/
+│   │   └── SKILL.md                      # Systematic checklist audit
+│   ├── propose/
+│   │   └── SKILL.md                      # Review panel debate on proposed changes
+│   ├── update/
+│   │   └── SKILL.md                      # Incremental blueprint updates
+│   └── scaffold/
+│       └── SKILL.md                      # Generate directory structure for new blueprint
 └── references/
-    ├── section-guide.md              # What each section must contain
-    └── diagram-guide.md              # Mermaid patterns for flows, states and domain models
+    ├── section-guide.md                  # What each section must contain
+    ├── diagram-guide.md                  # Mermaid patterns for flows, states and domain models
+    ├── examples.md                       # Before/after examples for every section type
+    └── maintenance.md                    # Keeping a blueprint current
 ```
 
 ## License

@@ -4,7 +4,129 @@ Before-and-after examples for every major section type. For smaller models espec
 
 ---
 
-## Example 1: Scenario
+## Example 1: Context
+
+### Bad
+
+```markdown
+## Context
+
+This feature provides users with the ability to manage their account settings
+through a React-based settings panel backed by a REST API. It uses Redux for
+state management and connects to the user_preferences table in PostgreSQL.
+```
+
+**Why it fails:**
+- Names implementation technologies (React, REST API, Redux, PostgreSQL) — these are not observable behaviour
+- Describes *how* it is built, not *why* it exists
+- No problem statement — what user or business need does this address?
+- No history — what came before this? Why was it built?
+
+### Good
+
+```markdown
+## Context
+
+Account management was previously handled exclusively through support tickets.
+Support was spending approximately 30% of their time on requests that users could
+self-serve — password changes, notification preferences, billing details. The
+average resolution time was 24-48 hours for changes that take seconds to make
+directly.
+
+This feature gives users direct control over their account settings, removing the
+support bottleneck and the resolution delay. It was prioritised after Q3 2024
+support analysis showed self-serviceable requests were the single largest ticket
+category.
+```
+
+---
+
+## Example 2: Scope
+
+### Bad
+
+```markdown
+## Scope
+
+This blueprint covers the order system.
+```
+
+**Why it fails:**
+- "The order system" is undefined — placement? Fulfilment? Returns? All of it?
+- No out-of-scope list — a reader cannot tell where the boundary is
+- No related blueprints — other systems clearly interact with orders
+- No reasons for exclusions — future readers will re-ask "is X in scope?"
+
+### Good
+
+```markdown
+## Scope
+
+### In scope
+- Order placement: from cart confirmation to order creation
+- Payment collection: card charge, failure handling, retry logic
+- Order confirmation: email to customer, inventory reservation
+
+### Out of scope
+- Shipping and fulfilment — covered in the [Fulfilment blueprint](../fulfilment.blueprint/README.md)
+- Refunds and disputes — separate flow, separate blueprint, planned for Q3
+- Subscription orders — different lifecycle; out of scope for this version
+
+### Related blueprints
+- [Inventory blueprint](../inventory.blueprint/README.md) — this blueprint consumes inventory availability
+- [Customer blueprint](../customers.blueprint/README.md) — Order belongs to a Customer; Customer lifecycle is there
+- [Notification blueprint](../notifications.blueprint/README.md) — sends confirmation emails; templates defined there
+```
+
+---
+
+## Example 3: Actors & Roles
+
+### Bad
+
+```markdown
+## Actors
+
+- Admin
+- User
+- System
+```
+
+**Why it fails:**
+- "Admin" and "User" are generic labels — no description of who they are or what distinguishes them
+- No capabilities or restrictions — a reader cannot tell what each actor can or cannot do
+- "Admin" likely covers multiple different permission sets (billing admin, user admin, super admin)
+- No description of the system actor — what does it do, what triggers it?
+
+### Good
+
+```markdown
+## Actors & Roles
+
+**Customer**
+A registered user who places and manages orders. Can place orders, view their
+order history, cancel orders before they ship, and request returns. Cannot see
+other customers' orders or access fulfilment tools.
+
+**Fulfilment Staff**
+An internal user who processes and ships orders. Can update order status, mark
+items as unavailable, and trigger refunds. Cannot place orders or access
+payment details.
+
+**Billing Admin**
+An internal user who manages payment issues and refund approvals. Can view
+payment details, approve refunds over the automatic threshold, and override
+payment failures. Cannot modify order contents or fulfilment status.
+
+**System (Order Processor)**
+An automated actor. Runs on order creation: validates payment, reserves
+inventory, sends confirmation. Triggered by order placement; not directly
+controllable by users.
+```
+
+---
+
+## Example 4: Scenario
 
 ### Bad
 
@@ -55,7 +177,7 @@ was rejected with a reason the visitor can act on.
 
 ---
 
-## Example 2: Requirement
+## Example 5: Requirement
 
 ### Bad
 
@@ -94,7 +216,7 @@ the payment processor keeps the system out of PCI scope.
 
 ---
 
-## Example 3: Terminology entry
+## Example 6: Terminology entry
 
 ### Bad
 
@@ -139,7 +261,7 @@ created. An Order accumulates Transactions as payment is attempted.
 
 ---
 
-## Example 4: Domain model entity
+## Example 7: Domain model entity
 
 ### Bad
 
@@ -198,7 +320,7 @@ request or admin action.
 
 ---
 
-## Example 5: User story
+## Example 8: User story
 
 ### Bad
 
@@ -237,7 +359,7 @@ expected within minutes of dispatch.
 
 ---
 
-## Example 6: Elicitation conversation
+## Example 9: Elicitation conversation
 
 ### Bad (model fills gaps silently)
 
@@ -297,7 +419,7 @@ expected within minutes of dispatch.
 
 ---
 
-## Example 7: Contradiction surfaced in real time
+## Example 10: Contradiction surfaced in real time
 
 > **User:** Users can cancel their subscription at any time.
 >
@@ -322,7 +444,7 @@ expected within minutes of dispatch.
 
 ---
 
-## Example 8: Handling "I don't know"
+## Example 11: Handling "I don't know"
 
 ### Bad
 

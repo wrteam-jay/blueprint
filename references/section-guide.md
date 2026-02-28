@@ -4,9 +4,9 @@ What each section of a blueprint must contain, what it must not contain, and com
 
 ---
 
-## Header block
+## Header block (README.md manifest)
 
-Every blueprint opens with a metadata block:
+Every blueprint is a directory. The `README.md` at its root serves as the manifest — it contains the metadata block and an index of all section files.
 
 ```markdown
 # Blueprint: [Name]
@@ -16,11 +16,35 @@ Every blueprint opens with a metadata block:
 **Last updated:** [date]
 **Spec owner:** [name — one person, not a team]
 **Related blueprints:** [links, with a one-phrase description of the relationship]
+
+---
+
+## Sections
+
+| # | Section | File | Status |
+|---|---------|------|--------|
+| 1 | Context | [context.md](./context.md) | Complete |
+| 2 | Scope | [scope.md](./scope.md) | Complete |
+| 3 | Actors & Roles | [actors.md](./actors.md) | Complete |
+| 4 | Terminology | [terminology.md](./terminology.md) | Complete |
+| 5 | User Stories | [stories.md](./stories.md) | Draft |
+| 6 | Scenarios & Flows | [scenarios/](./scenarios/_index.md) | Draft |
+| 7 | Domain Model | [domain-model.md](./domain-model.md) | Draft |
+| 8 | Requirements | [requirements.md](./requirements.md) | Pending |
+| 9 | Decision Log | [decisions.md](./decisions.md) | Active |
+| 10 | Open Questions | [questions.md](./questions.md) | Active |
+| 11 | Changelog | [changelog.md](./changelog.md) | Active |
+
+## Completion tier
+
+**Current: [Tier]** — [brief description of what has been captured and what remains]
 ```
 
 **Status** signals how trustworthy the document is. Draft = work in progress. Active = the team treats this as authoritative. Deprecated = the system has changed; this no longer reflects reality.
 
 **Version** increments when the document changes in a meaningful way. Patch changes (typos, clarifications) do not need a version bump. Structural changes (new scenarios, revised domain model, resolved terminology conflicts) do.
+
+**Section status** in the index table tracks the state of each file: Pending (not started), Draft (in progress), Complete (captured and verified), or Active (living sections like decisions and questions that are always evolving).
 
 ---
 
@@ -253,6 +277,32 @@ Each scenario:
               Customer has received confirmation.
 ```
 
+### Scenario file naming
+
+Each scenario lives in its own file inside the `scenarios/` directory. Use kebab-case names that describe the flow, not the actor:
+
+```
+scenarios/
+├── _index.md              # Index with one-line summaries
+├── order-placement.md
+├── payment-failure.md
+├── order-cancellation.md
+└── inventory-hold.md
+```
+
+The `_index.md` file lists all scenarios with a one-line summary and link:
+
+```markdown
+# Scenarios
+
+| Scenario | Actors | File |
+|----------|--------|------|
+| Order Placement | Customer, System | [order-placement.md](./order-placement.md) |
+| Payment Failure | Customer, System | [payment-failure.md](./payment-failure.md) |
+| Order Cancellation | Customer, Fulfilment Staff | [order-cancellation.md](./order-cancellation.md) |
+| Inventory Hold | System, Fulfilment Staff | [inventory-hold.md](./inventory-hold.md) |
+```
+
 ### Diagrams
 
 Use Mermaid diagrams where a flow has branching, multiple actors, or is long enough that prose is hard to follow at a glance. See the [diagram guide](./diagram-guide.md) for patterns.
@@ -479,31 +529,31 @@ Real products have multiple blueprints. Entities, terminology and events cross b
 A blueprint **owns** an entity if it governs its lifecycle — creation, transitions, deletion. A blueprint **references** an entity if it reads from it or depends on its state but does not change it.
 
 ```
-Orders blueprint: owns Order, LineItem, Fulfilment
-Customers blueprint: owns Customer, Address, PaymentMethod
-Notifications blueprint: owns Notification, NotificationPreference
+orders.blueprint/: owns Order, LineItem, Fulfilment
+customers.blueprint/: owns Customer, Address, PaymentMethod
+notifications.blueprint/: owns Notification, NotificationPreference
 
-Orders blueprint references: Customer (read-only — gets email, name)
-Notifications blueprint references: Order (reads status to trigger notifications)
+orders.blueprint/ references: Customer (read-only — gets email, name)
+notifications.blueprint/ references: Order (reads status to trigger notifications)
 ```
 
 Do not re-define entities owned by another blueprint. Reference them with a link.
 
 ### How to reference another blueprint's entity
 
-In your Terminology section:
+In your `terminology.md`:
 
 ```markdown
 **Customer**
-Defined in the [Customers blueprint](../customers/blueprint.md). For the purposes
+Defined in the [Customers blueprint](../customers.blueprint/README.md). For the purposes
 of this blueprint: a registered account that places orders. The Orders blueprint
 reads Customer.email and Customer.name; it does not modify Customer records.
 ```
 
-In your Domain Model:
+In your `domain-model.md`:
 
 ```markdown
-*Relationships:* Belongs to one **Customer** ([Customers blueprint](../customers/blueprint.md)).
+*Relationships:* Belongs to one **Customer** ([Customers blueprint](../customers.blueprint/README.md)).
 ```
 
 ### Shared terminology across blueprints
@@ -529,7 +579,7 @@ When one blueprint's behaviour depends on an event from another:
 ### Subscription Activated (triggered by Billing blueprint)
 
 **Trigger:** Billing blueprint emits `SubscriptionActivated` event
-**Source:** [Billing blueprint](../billing/blueprint.md) — Section 6, Scenario "First Payment"
+**Source:** [Billing blueprint](../billing.blueprint/README.md) — [First Payment scenario](../billing.blueprint/scenarios/first-payment.md)
 ...
 ```
 

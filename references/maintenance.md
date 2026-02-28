@@ -54,7 +54,7 @@ New research often contradicts assumptions in user stories. Update stories whose
 Ask the new person to read the blueprint and flag anything that does not match what they learn from the codebase or from the team. New readers find gaps that familiar readers stop seeing. Their confusion is diagnostic.
 
 **When a change proposal is approved:**
-Any time a PROPOSE.md debate results in an adopted change, update the blueprint to reflect it. Record the change in the changelog and the decision in the decision log.
+Any time a propose skill debate results in an adopted change, update the blueprint to reflect it. Record the change in the changelog and the decision in the decision log.
 
 **On a regular cadence (recommended: quarterly):**
 Even without specific triggers, a quarterly review catches gradual drift. Ask: "Is every scenario in this blueprint still how the system actually works?"
@@ -63,7 +63,7 @@ Even without specific triggers, a quarterly review catches gradual drift. Ask: "
 
 ## Delta protocol — how to record changes
 
-When a blueprint is updated, changes should be recorded so readers know whether the version they read last month is still current.
+When a blueprint is updated, edit only the affected section files — not the whole directory. After edits, update `changelog.md` and the section status in `README.md` so readers know whether the version they read last month is still current.
 
 ### What counts as a meaningful change
 
