@@ -1,7 +1,7 @@
 ---
 name: blueprint
 description: A living product specification skill. Use when you want to document how a system works, capture user stories and flows, build shared vocabulary, discuss existing functionality, or create a single source of truth for a feature or product area.
-version: 1
+version: 2
 auto_trigger:
   - file_patterns: ["**/*.blueprint/README.md", "**/*.blueprint/**/*.md"]
   - keywords: ["blueprint", "living spec", "product spec", "system spec", "document how this works", "single source of truth", "spec this out"]
