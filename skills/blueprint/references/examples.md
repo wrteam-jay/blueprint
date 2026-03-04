@@ -1,153 +1,81 @@
-# Worked Examples
+<ref-guide name="worked-examples">
 
-Before-and-after examples for every major section type. For smaller models especially: examples outperform descriptions. When in doubt about what "good" looks like, match these patterns.
+<brief>Before-and-after examples for every major section type. Examples outperform descriptions — when in doubt, match these patterns.</brief>
 
----
-
-## Example 1: Context
-
-### Bad
-
-```markdown
-## Context
-
+<example n="1" name="Context">
+<bad>
 This feature provides users with the ability to manage their account settings
 through a React-based settings panel backed by a REST API. It uses Redux for
 state management and connects to the user_preferences table in PostgreSQL.
-```
+</bad>
+<why-bad>Names implementation (React, REST, Redux, PostgreSQL). Describes how, not why. No problem statement or history.</why-bad>
+<good>
+Account management was previously handled through support tickets. Support spent
+~30% of their time on self-serviceable requests — password changes, notification
+preferences, billing details. Average resolution: 24-48 hours for changes that
+take seconds directly.
 
-**Why it fails:**
-- Names implementation technologies (React, REST API, Redux, PostgreSQL) — these are not observable behaviour
-- Describes *how* it is built, not *why* it exists
-- No problem statement — what user or business need does this address?
-- No history — what came before this? Why was it built?
+This feature gives users direct control, removing the support bottleneck.
+Prioritised after Q3 2024 analysis showed self-serviceable requests were the
+largest ticket category.
+</good>
+</example>
 
-### Good
-
-```markdown
-## Context
-
-Account management was previously handled exclusively through support tickets.
-Support was spending approximately 30% of their time on requests that users could
-self-serve — password changes, notification preferences, billing details. The
-average resolution time was 24-48 hours for changes that take seconds to make
-directly.
-
-This feature gives users direct control over their account settings, removing the
-support bottleneck and the resolution delay. It was prioritised after Q3 2024
-support analysis showed self-serviceable requests were the single largest ticket
-category.
-```
-
----
-
-## Example 2: Scope
-
-### Bad
-
-```markdown
-## Scope
-
-This blueprint covers the order system.
-```
-
-**Why it fails:**
-- "The order system" is undefined — placement? Fulfilment? Returns? All of it?
-- No out-of-scope list — a reader cannot tell where the boundary is
-- No related blueprints — other systems clearly interact with orders
-- No reasons for exclusions — future readers will re-ask "is X in scope?"
-
-### Good
-
-```markdown
-## Scope
-
+<example n="2" name="Scope">
+<bad>This blueprint covers the order system.</bad>
+<why-bad>"The order system" is undefined. No out-of-scope list. No related blueprints. No exclusion reasons.</why-bad>
+<good>
 ### In scope
 - Order placement: from cart confirmation to order creation
 - Payment collection: card charge, failure handling, retry logic
 - Order confirmation: email to customer, inventory reservation
 
 ### Out of scope
-- Shipping and fulfilment — covered in the [Fulfilment blueprint](../fulfilment.blueprint/README.md)
-- Refunds and disputes — separate flow, separate blueprint, planned for Q3
+- Shipping and fulfilment — covered in the Fulfilment blueprint
+- Refunds and disputes — separate flow, planned for Q3
 - Subscription orders — different lifecycle; out of scope for this version
 
 ### Related blueprints
-- [Inventory blueprint](../inventory.blueprint/README.md) — this blueprint consumes inventory availability
-- [Customer blueprint](../customers.blueprint/README.md) — Order belongs to a Customer; Customer lifecycle is there
-- [Notification blueprint](../notifications.blueprint/README.md) — sends confirmation emails; templates defined there
-```
+- Inventory — consumes inventory availability
+- Customer — Order belongs to a Customer; lifecycle defined there
+- Notification — sends confirmation emails; templates defined there
+</good>
+</example>
 
----
-
-## Example 3: Actors & Roles
-
-### Bad
-
-```markdown
-## Actors
-
+<example n="3" name="Actors & Roles">
+<bad>
 - Admin
 - User
 - System
-```
+</bad>
+<why-bad>Generic labels. No descriptions, capabilities, or restrictions. "Admin" likely covers multiple permission sets.</why-bad>
+<good>
+**Customer** — registered user who places and manages orders. Can place orders,
+view history, cancel before shipping, request returns. Cannot see other customers'
+orders.
 
-**Why it fails:**
-- "Admin" and "User" are generic labels — no description of who they are or what distinguishes them
-- No capabilities or restrictions — a reader cannot tell what each actor can or cannot do
-- "Admin" likely covers multiple different permission sets (billing admin, user admin, super admin)
-- No description of the system actor — what does it do, what triggers it?
+**Fulfilment Staff** — internal user who processes and ships. Can update order
+status, mark items unavailable, trigger refunds. Cannot place orders or access
+payments.
 
-### Good
+**Billing Admin** — manages payment issues and refund approvals. Can view payment
+details, approve refunds over threshold, override payment failures. Cannot modify
+orders or fulfilment.
 
-```markdown
-## Actors & Roles
+**System (Order Processor)** — automated. Validates payment, reserves inventory,
+sends confirmation on order creation. Not directly controllable by users.
+</good>
+</example>
 
-**Customer**
-A registered user who places and manages orders. Can place orders, view their
-order history, cancel orders before they ship, and request returns. Cannot see
-other customers' orders or access fulfilment tools.
-
-**Fulfilment Staff**
-An internal user who processes and ships orders. Can update order status, mark
-items as unavailable, and trigger refunds. Cannot place orders or access
-payment details.
-
-**Billing Admin**
-An internal user who manages payment issues and refund approvals. Can view
-payment details, approve refunds over the automatic threshold, and override
-payment failures. Cannot modify order contents or fulfilment status.
-
-**System (Order Processor)**
-An automated actor. Runs on order creation: validates payment, reserves
-inventory, sends confirmation. Triggered by order placement; not directly
-controllable by users.
-```
-
----
-
-## Example 4: Scenario
-
-### Bad
-
-```markdown
+<example n="4" name="Scenario">
+<bad>
 ### User Login
 
 The user enters their credentials. The system validates them and logs the user in.
 The user is redirected to their dashboard.
-```
-
-**Why it fails:**
-- No named actor — "the user" is not an actor declaration
-- No trigger — what starts this? A button click? An API call? A redirect?
-- No decision points — real login has multiple branches
-- "The system validates" describes a mechanism, not a behaviour
-- No failure paths — what happens with a wrong password? A locked account?
-- No end state — what is true when this is complete?
-
-### Good
-
-```markdown
+</bad>
+<why-bad>No named actor. No trigger. No decision points. "The system validates" is mechanism. No failure paths. No end state.</why-bad>
+<good>
 ### Login
 
 **Actor:** Visitor (unauthenticated)
@@ -155,319 +83,177 @@ The user is redirected to their dashboard.
 
 **Flow:**
 1. Visitor submits email and password.
-2. System checks whether an account with that email exists and the password matches.
-   - If no account found or password incorrect → visitor sees a generic "incorrect
-     email or password" message. No indication of which was wrong (prevents
-     enumeration). Failed attempt counter increments.
-   - If failed attempts reach the lockout threshold → account moves to *locked* status.
-     See: [Account Lockout scenario].
-   - If account is *locked* → visitor sees "account locked" with instructions to
-     unlock. No further validation. See: [Account Unlock scenario].
-3. If credentials are valid and account is *active*:
-   - A new Session is created.
-   - Failed attempt counter resets to zero.
-   - Visitor is taken to the page they originally tried to access, or their home
-     page if they arrived at login directly.
-4. If credentials are valid but account is *unverified* → visitor is redirected
-   to email verification prompt. No session is created.
+2. System checks whether account exists and password matches.
+   - If no match → generic "incorrect email or password" (prevents enumeration).
+     Failed counter increments.
+   - If lockout threshold reached → account moves to *locked*.
+     See: Account Lockout scenario.
+   - If account *locked* → "account locked" with unlock instructions.
+3. If valid and account *active*: new Session created, counter resets, visitor
+   taken to original page or home.
+4. If valid but *unverified* → redirected to email verification. No session created.
 
-**End state:** A Session exists and the visitor is authenticated — or the attempt
-was rejected with a reason the visitor can act on.
-```
+**End state:** Session exists and visitor is authenticated — or attempt rejected
+with actionable reason.
+</good>
+</example>
 
----
-
-## Example 5: Requirement
-
-### Bad
-
-```markdown
+<example n="5" name="Requirement">
+<bad>
 FR-005: The system should handle payments securely and efficiently.
-```
-
-**Why it fails:**
-- "Should" signals optionality — if it's mandatory, use "must"
-- "Securely" is undefined — secure against what threat, to what standard?
-- "Efficiently" has no threshold — efficiently compared to what?
-- No acceptance criteria — there is no test you could write against this
-- No rationale — why does this requirement exist?
-
-### Good
-
-```markdown
+</bad>
+<why-bad>"Should" signals optionality. "Securely" and "efficiently" undefined. No acceptance criteria. No rationale.</why-bad>
+<good>
 **FR-005** [Must Have]
 
 *Statement:* Payment card data must not pass through or be stored on company
-servers at any point during the checkout flow.
+servers at any point during checkout.
 
-*Rationale:* PCI DSS compliance. Storing card data would place the system in
-scope for a full PCI audit and ongoing compliance programme. Tokenisation via
-the payment processor keeps the system out of PCI scope.
+*Rationale:* PCI DSS compliance — storing card data requires full PCI audit.
+Tokenisation keeps system out of scope.
 
 *Source:* Legal/Security policy — Decision D-007.
 
 *Acceptance criteria:*
-- All card entry is handled by the payment processor's hosted fields or SDK;
-  raw card numbers never reach the application
-- Card numbers, CVVs and expiry dates do not appear in application logs,
-  error messages or API responses at any level of the stack
-- A PCI self-assessment questionnaire confirms reduced scope is achieved
-```
+- All card entry via payment processor's hosted fields/SDK
+- Card numbers, CVVs, expiry dates never in logs, errors or API responses
+- PCI self-assessment confirms reduced scope
+</good>
+</example>
 
----
-
-## Example 6: Terminology entry
-
-### Bad
-
-```markdown
-**Order**
-An order is when a customer orders something from the store. Also sometimes
-called a "purchase" in the checkout flow and a "transaction" by the finance team.
-```
-
-**Why it fails:**
-- Circular — defines "order" using the word "order"
-- Lists three names without resolving which is correct
-- Conflates Order (intent to purchase), Purchase (synonym), and Transaction
-  (financial record) — these are different things
-- A reader still does not know what an Order is after reading this
-
-### Good
-
-```markdown
-**Order**
-The record of a customer's intent to purchase. Created when the customer confirms
-their cart. Persists through fulfilment regardless of payment outcome. Has a lifecycle
-from *pending* through to *delivered*, *cancelled* or *returned*.
+<example n="6" name="Terminology entry">
+<bad>
+**Order** — An order is when a customer orders something. Also called a "purchase"
+in checkout and a "transaction" by finance.
+</bad>
+<why-bad>Circular definition. Three unresolved names. Conflates Order, Purchase and Transaction.</why-bad>
+<good>
+**Order** — The record of a customer's intent to purchase. Created when customer
+confirms cart. Persists through fulfilment regardless of payment outcome. Lifecycle:
+*pending* through *delivered*, *cancelled* or *returned*.
 
 *Distinct from:*
-- **Transaction** — the financial record of a single payment attempt. An Order
-  may have multiple Transactions (e.g. one declined, one successful).
-- **Fulfilment** — the physical preparation and shipment of the Order. An Order
-  has at most one Fulfilment, created when it enters *processing* status.
+- **Transaction** — financial record of a single payment attempt. An Order may
+  have multiple.
+- **Fulfilment** — physical preparation and shipment. At most one per Order,
+  created at *processing*.
 
-*Code note:* The checkout module uses "purchase" for Order. This is a known
-inconsistency — flagged for cleanup. Blueprint term is **Order** everywhere.
-(See Decision D-003.)
+*Code note:* Checkout module uses "purchase" for Order. Known inconsistency flagged
+for cleanup. Blueprint term: **Order** everywhere. (See Decision D-003.)
+</good>
+</example>
 
-**Transaction**
-The financial record of one payment attempt against an Order. Immutable once
-created. An Order accumulates Transactions as payment is attempted.
-
-*Distinct from:* an **Order** (the purchase intent) and a **Payment Method**
-(the stored card details used to create a Transaction).
-```
-
----
-
-## Example 7: Domain model entity
-
-### Bad
-
-```markdown
-**User**
-- id: integer
-- email: varchar
-- name: varchar
-- password_hash: varchar
-- is_active: boolean
-- is_verified: boolean
-- created_at: timestamp
-- deleted_at: timestamp (nullable)
-```
-
-**Why it fails:**
-- This is a database schema, not a domain model
-- No states — `is_active` and `is_verified` in combination imply four states nobody named
-- No lifecycle — who creates a User? Who can change it? Who deletes it?
-- No relationships — what does a User have, belong to, or interact with?
-- Implementation field names (`password_hash`, `deleted_at`) belong in tech spec
-
-### Good
-
-```markdown
+<example n="7" name="Domain model entity">
+<bad>
+**User** — id: integer, email: varchar, name: varchar, password_hash: varchar,
+is_active: boolean, is_verified: boolean, created_at: timestamp, deleted_at: timestamp
+</bad>
+<why-bad>Database schema, not domain model. No states (is_active + is_verified = 4 unnamed states). No lifecycle, relationships, or invariants.</why-bad>
+<good>
 **Entity: User**
 
-*Definition:* A person who has registered for an account. Can place orders and
-manage their own data.
+*Definition:* A person who has registered. Can place orders and manage their own data.
 
 *States:*
-- **unverified** — registered but email not yet confirmed
-- **active** — verified and in good standing; can place orders
-- **suspended** — access restricted due to payment failure or policy violation;
-  cannot place new orders; existing orders unaffected
-- **deleted** — soft-deleted; record retained for 7 years per legal requirement;
-  cannot log in
+- **unverified** — registered, email not confirmed
+- **active** — verified, in good standing
+- **suspended** — access restricted (payment failure or policy violation)
+- **deleted** — soft-deleted, retained 7 years per legal requirement
 
 *Transitions:*
-- unverified → active: User confirms email address
-- active → suspended: Payment processor webhook reports unrecoverable failure,
-  or admin suspends manually
-- suspended → active: User resolves payment issue or admin reinstates
-- active | suspended → deleted: User requests deletion or admin deletes
+- unverified → active: email confirmed
+- active → suspended: unrecoverable payment failure or admin action
+- suspended → active: payment resolved or admin reinstates
+- active | suspended → deleted: user request or admin action
 
-*Invariants:* A deleted User cannot be reactivated. Email address must be unique
-across all non-deleted Users.
+*Invariants:* Deleted cannot be reactivated. Email unique across non-deleted users.
 
-*Relationships:* Places Orders (0 or more). Has Sessions (0 or more). Has one
-Payment Method (optional).
+*Relationships:* Places Orders (0+). Has Sessions (0+). Has one Payment Method
+(optional).
 
-*Lifecycle owner:* Created by registration flow. Transitions managed by payment
-processor webhooks, email verification flow, and admin tools. Deletion by user
-request or admin action.
-```
+*Lifecycle owner:* Created by registration. Transitions by payment webhooks, email
+verification, admin tools.
+</good>
+</example>
 
----
-
-## Example 8: User story
-
-### Bad
-
-```markdown
+<example n="8" name="User story">
+<bad>
 US-003: As a user, I want notifications.
-```
-
-**Why it fails:**
-- "User" is not a specific actor — which user? In what context?
-- "Notifications" is not a need — it is a solution; what does the user actually need?
-- No "so that" clause — no outcome, no way to evaluate whether it was delivered
-- Not testable — there is no observable state of the system that satisfies "wants notifications"
-
-### Good
-
-```markdown
+</bad>
+<why-bad>"User" not specific. "Notifications" is solution, not need. No outcome. Not testable.</why-bad>
+<good>
 **US-003** [Must Have]
 
 As a **customer who has placed an order**, I want to be notified when my order
-ships and given a tracking reference, so that I know when to expect delivery
-and can track the package without contacting support.
+ships with a tracking reference, so that I can track delivery without contacting
+support.
 
-*Evidence:* "Where is my order?" accounts for 34% of support ticket volume
-(Zendesk, Q3 2024). Exit survey data shows 61% of users who abandoned
-post-purchase return visits cited lack of shipping updates as the reason.
-Six user interviews (2024-10-08) confirmed that shipping confirmation is
-expected within minutes of dispatch.
+*Evidence:* "Where is my order?" = 34% of support volume (Zendesk Q3 2024).
+61% of churned post-purchase users cited lack of shipping updates. 6 interviews
+confirmed shipping notification expected within minutes.
 
 *Acceptance criteria:*
-- Customer receives notification within 5 minutes of order reaching *shipped* status
-- Notification includes order number, carrier name, and tracking link
-- Tracking link is valid and shows current status when opened
-- Notification is sent to the email address on the order, not necessarily the
-  current account email (in case it was updated after placing the order)
-```
+- Notification within 5 minutes of *shipped* status
+- Includes order number, carrier, tracking link
+- Tracking link valid and current when opened
+- Sent to email on the order (not necessarily current account email)
+</good>
+</example>
 
----
+<example n="9" name="Elicitation conversation">
+<bad>
+User: We need a user authentication system.
+Model: I'll spec that out. [generates 400 words from a single sentence]
+</bad>
+<why-bad>Made up session duration, password requirements, auth method. No scope, actors, or open questions. Treated all gaps as decisions.</why-bad>
+<good>
+User: We need a user authentication system.
+Model: Let's capture this properly. What problem are we solving? New system or changing existing?
 
-## Example 9: Elicitation conversation
+User: New system, starting from scratch.
+Model: Who are the users — internal staff, customers, or both?
 
-### Bad (model fills gaps silently)
+User: Customers (B2C) and internal admins.
+Model: Do they authenticate the same way?
 
-> **User:** We need a user authentication system.
->
-> **Model:** I'll spec that out. Users authenticate with email and password. Sessions
-> last 24 hours. Passwords must be 8+ characters. There's a "forgot password" flow
-> that sends a reset link. Here's the full spec:
-> [generates 400 words of spec from a single sentence]
+User: Customers use email/password or Google. Admins use company SSO.
+Model: Let me check what I have:
+*Actors: Customer (email/password or Google), Admin (SSO). Scope: new auth system.* Match?
 
-**Why it fails:**
-- Made up session duration (24 hours) without asking
-- Assumed password requirements without asking
-- Assumed email/password auth — could be SSO, OAuth, magic links
-- No scope established — is this for a new system? Existing system?
-- No actors named — who are the users?
-- No open questions surfaced — treated all gaps as decisions
+User: Yes.
+Model: Great. What happens to a customer's session — timeout, or stay logged in?
 
-### Good (model asks, captures, verifies)
+Demonstrates: one question at a time, asks before assuming, verification checkpoint, scope and actors before requirements.
+</good>
+</example>
 
-> **User:** We need a user authentication system.
->
-> **Model:** Let's capture this properly. First — what problem are we solving?
-> Is this for a system that currently has no auth, or are we changing how auth works?
->
-> **User:** New system, starting from scratch.
->
-> **Model:** Good. One sentence — who are the users? Are they internal staff,
-> customers, or both?
->
-> **User:** Customers. B2C. And internal admins.
->
-> **Model:** Two different actor types — good to know early. Do customers and admins
-> authenticate the same way, or differently? For example, some products use social
-> login for customers but SSO/LDAP for internal staff.
->
-> **User:** Customers use email/password or Google. Admins use the company SSO.
->
-> **Model:** Noted. Before I go further — let me capture what I have and check
-> it's right:
->
-> *Actors: Customer (email/password or Google OAuth), Admin (company SSO)*
-> *Scope: New authentication system*
->
-> Does that match? Anything missing?
->
-> **User:** Yes, that's right.
->
-> **Model:** Great. Now — what happens to a customer's session? Is there a timeout,
-> or do they stay logged in until they log out?
+<example n="10" name="Contradiction surfaced">
+User: Users can cancel their subscription at any time.
+[later]
+User: We need to honour the 30-day notice period in our terms.
+Model: I want to flag a conflict. "Cancel at any time" vs "30-day notice" cannot both be true.
+Options: immediate cancel with billing remainder, 30-day effective date, trial exceptions.
 
-**What this demonstrates:**
-- One question at a time
-- Asks before assuming
-- Verification checkpoint before moving forward
-- Extracts scope and actors before requirements
+Logging as OQ-004: When a user cancels, immediate or 30-day? Billing treatment?
+Owner: [assign] | Blocking: BR-002, FR-011
+</example>
 
----
+<example n="11" name="Handling 'I don't know'">
+<bad>
+User: I'm not sure what happens when the payment fails.
+Model: Typically the system retries 3 times with exponential backoff, then suspends.
+</bad>
+<why-bad>Invented retry count, backoff, and notification. Filled gap with fiction.</why-bad>
+<good>
+User: I'm not sure what happens when the payment fails.
+Model: Let me note that as an open question:
 
-## Example 10: Contradiction surfaced in real time
+OQ-007: Payment failure policy — retry count and period? Subscription status?
+Who notified, how, when? Grace period?
+Owner: [Product/Finance] | Blocking: Scenarios 6, 7; FR-019, BR-005
 
-> **User:** Users can cancel their subscription at any time.
->
-> [... later in the session ...]
->
-> **User:** We need to honour the 30-day notice period in our terms of service.
->
-> **Model:** I want to flag a conflict before we go further. Earlier you said users
-> can cancel at any time. Now you've described a 30-day notice period in the terms.
-> These two things cannot both be true as stated.
->
-> Which takes precedence? Some options:
-> - Cancel takes effect immediately but the 30-day period still applies for billing
->   (they stop service but are charged for the remaining period)
-> - Users can request cancellation at any time, but the effective date is 30 days out
-> - There are exceptions — e.g. within a trial period, cancellation is immediate
->
-> I'll note this as an open question until it's resolved.
-> **OQ-004:** When a user cancels, does the cancellation take effect immediately or
-> after a 30-day notice period? What is the billing treatment in each case?
-> *Owner: [to assign] | Blocking: BR-002, FR-011*
+We can continue and come back to this.
+</good>
+</example>
 
----
-
-## Example 11: Handling "I don't know"
-
-### Bad
-
-> **User:** I'm not sure what happens when the payment fails.
->
-> **Model:** Typically in these cases, the system retries 3 times with exponential
-> backoff, then marks the subscription as suspended and notifies the user.
-
-**Why it fails:** Made up behaviour to fill a gap. The retry count, backoff strategy and notification are all invented.
-
-### Good
-
-> **User:** I'm not sure what happens when the payment fails.
->
-> **Model:** That's fine — let me note it as an open question rather than assume.
->
-> **OQ-007:** What is the payment failure handling policy? Specifically:
-> - Is there a retry? How many times, over what period?
-> - What status does the subscription move to?
-> - Who is notified, through what channel, and when?
-> - Is there a grace period before access is revoked?
->
-> *Owner: [Product/Finance to decide] | Blocking: Scenarios 6, 7; FR-019, BR-005*
->
-> We can continue with the rest of the spec and come back to this. What happens
-> when a payment succeeds?
+</ref-guide>

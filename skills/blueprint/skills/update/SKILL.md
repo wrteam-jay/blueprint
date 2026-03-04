@@ -3,89 +3,65 @@ name: update
 description: Use when a system has changed and its blueprint needs to reflect the change — new behaviour, modified flows, revised rules, or resolved questions.
 ---
 
-# Blueprint Update
+<skill name="update">
 
-This skill incrementally updates an existing blueprint after a system change. It reads only the affected section files, makes targeted edits, and records the change — without rewriting the entire blueprint.
+<brief>Incrementally update an existing blueprint after a system change. Read only affected sections, make targeted edits, record the change — without rewriting the entire blueprint.</brief>
 
----
+Inputs: blueprint directory path, description of what changed.
 
-## Inputs
+<process name="update">
 
-1. **Blueprint directory path** — the `[name].blueprint/` directory to update
-2. **Description of what changed** — what happened in the system, what behaviour is new or different
+<step n="1" name="Read the manifest">
+Open README.md: current state, sections, version, completion tier.
+</step>
 
----
+<step n="2" name="Identify affected files">
+<table name="change-mapping">
+<row change="New flow or behaviour" files="scenarios/ (new file), _index.md, stories.md"/>
+<row change="Modified flow" files="scenarios/[name].md"/>
+<row change="New entity or state" files="domain-model.md"/>
+<row change="New or changed rule" files="requirements.md"/>
+<row change="New actor" files="actors.md, scenarios/"/>
+<row change="Terminology change" files="terminology.md, any file using old term"/>
+<row change="Resolved question" files="questions.md, decisions.md"/>
+<row change="Scope change" files="scope.md"/>
+</table>
+</step>
 
-## Process
+<step n="3" name="Read only affected files">
+Targeted loading is the point of the multi-file format.
+</step>
 
-### 1. Read the manifest
+<step n="4" name="Check staleness signals">
+Consult <ref src="../../references/maintenance.md" section="staleness-signals" load="lazy"/>. Does this change reveal other stale sections?
+</step>
 
-Open `README.md` to understand the blueprint's current state: which sections exist, their status, the current version, and the completion tier.
+<step n="5" name="Draft updates">
+Edit affected files. Follow <ref src="../../references/section-guide.md" load="lazy"/>. Preserve existing accurate content.
+</step>
 
-### 2. Identify affected section files
+<step n="6" name="Update changelog.md">
+Add entry per delta protocol: | [version] | [date] | [author] | [one sentence per change] |
+</step>
 
-From the change description, determine which section files need updating. Common mappings:
+<step n="7" name="Update decisions.md">
+If decisions were made — terminology resolutions, scope boundaries, rule changes — record with rationale.
+</step>
 
-| Change type | Likely affected files |
-|-------------|----------------------|
-| New flow or behaviour | `scenarios/` (new file), `_index.md`, `stories.md` |
-| Modified flow | `scenarios/[name].md` |
-| New entity or state | `domain-model.md` |
-| New or changed rule | `requirements.md` |
-| New actor | `actors.md`, `scenarios/` |
-| Terminology change | `terminology.md`, any file using the old term |
-| Resolved question | `questions.md`, `decisions.md` |
-| Scope change | `scope.md` |
+<step n="8" name="Update manifest">
+In README.md: bump version, update date, update section statuses, update tier if advanced.
+</step>
 
-### 3. Read only those files
+<step n="9" name="Quick review">
+Convene 5-panellist quick review (product owner, engineer, user advocate, completeness advocate, simplicity advocate). For trivial changes (typo, single open question), use 3 panellists.
+</step>
 
-Load the affected section files into context. Do not read the entire blueprint — targeted loading is the point of the multi-file format.
+</process>
 
-### 4. Check staleness signals
+Output: updated section files, updated changelog.md, updated decisions.md (if applicable), updated README.md manifest.
 
-Consult the [maintenance guide](../../references/maintenance.md) staleness signals. Does this change reveal other sections that may also be stale? If so, note them for review.
+<ref src="../../references/maintenance.md" name="Maintenance guide" load="lazy"/>
+<ref src="../../references/section-guide.md" name="Section guide" load="lazy"/>
+<ref src="../../TEAM.md" name="Review panel" load="lazy"/>
 
-### 5. Draft updates to affected files
-
-Edit each affected file. Follow the format and conventions in the [section guide](../../references/section-guide.md). Preserve existing content that is still accurate — do not rewrite sections unnecessarily.
-
-### 6. Update changelog.md
-
-Add a changelog entry for every meaningful change. Follow the delta protocol in the [maintenance guide](../../references/maintenance.md):
-
-```markdown
-| [new version] | [date] | [author] | [one sentence per substantive change] |
-```
-
-### 7. Update decisions.md
-
-If any decisions were made as part of this update — terminology resolutions, scope boundaries, rule changes — record them with rationale.
-
-### 8. Update the manifest
-
-In `README.md`:
-- Bump the version if the change is meaningful (see delta protocol)
-- Update the `Last updated` date
-- Update section statuses if any changed
-- Update the completion tier if it advanced
-
-### 9. Quick review
-
-Convene a quick review (5 panellists: product owner, engineer, user advocate, completeness advocate, simplicity advocate) to validate that the update is coherent with the rest of the blueprint. For trivial changes (typo fixes, resolving a single open question), use 3 panellists (product owner, engineer, user advocate).
-
----
-
-## Output
-
-- Updated section files (only the ones that changed)
-- Updated `changelog.md` with entry
-- Updated `decisions.md` if decisions were made
-- Updated `README.md` manifest (version, date, section status)
-
----
-
-## References
-
-- [Maintenance guide](../../references/maintenance.md) — staleness signals, delta protocol, ownership
-- [Section guide](../../references/section-guide.md) — what each section must contain
-- [Review panel](../../TEAM.md) — panellist roles for quick review
+</skill>

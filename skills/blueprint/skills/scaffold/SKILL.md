@@ -3,28 +3,18 @@ name: scaffold
 description: Use when creating a new blueprint — generates the full directory structure with placeholder files and inline hints for each section.
 ---
 
-# Blueprint Scaffold
+<skill name="scaffold">
 
-This skill generates the directory structure for a new blueprint. It creates all section files with headings and comment hints so that the team knows what each file should contain.
+<brief>Generate the directory structure for a new blueprint with placeholder files and comment hints for each section.</brief>
 
----
+<questions name="before-scaffolding">
+<q>Blueprint name — what is this blueprint about? (used for directory name and title)</q>
+<q>Scope — one sentence describing what this blueprint covers</q>
+<q>Spec owner — who is accountable for accuracy?</q>
+<q>Related blueprints — are there adjacent blueprints this one touches?</q>
+</questions>
 
-## Quick questions
-
-Before generating the scaffold, ask:
-
-1. **Blueprint name** — what is this blueprint about? (used for the directory name and title)
-2. **Scope** — one sentence describing what this blueprint covers
-3. **Spec owner** — who is accountable for this blueprint's accuracy?
-4. **Related blueprints** — are there adjacent blueprints this one touches?
-
----
-
-## Output
-
-Creates the following directory structure:
-
-```
+<template name="directory-structure">
 [name].blueprint/
 ├── README.md
 ├── context.md
@@ -39,13 +29,9 @@ Creates the following directory structure:
 ├── decisions.md
 ├── questions.md
 └── changelog.md
-```
+</template>
 
-### README.md
-
-Populated with the answers from the quick questions:
-
-```markdown
+<template name="readme">
 # Blueprint: [Name]
 
 **Status:** Draft
@@ -75,79 +61,53 @@ Populated with the answers from the quick questions:
 ## Completion tier
 
 **Current: Tier 0 (Scaffold)** — Directory created. No sections captured yet.
-```
+</template>
 
-### Section files
+<template name="section-files">
+context.md:      # Context
+                 &lt;!-- Why this exists. The problem, who has it, why it matters. Not how it is built. --&gt;
 
-Each section file has a heading and a comment hint describing what belongs there:
+scope.md:        # Scope
+                 &lt;!-- What is in scope, what is out of scope (with reasons), and related blueprints. --&gt;
 
-```markdown
-# Context
-<!-- Why this exists. The problem, who has it, why it matters. Not how it is built. -->
-```
+actors.md:       # Actors &amp; Roles
+                 &lt;!-- Every party who interacts with the system. Name, description, capabilities, restrictions. --&gt;
 
-```markdown
-# Scope
-<!-- What is in scope, what is out of scope (with reasons), and related blueprints. -->
-```
+terminology.md:  # Terminology
+                 &lt;!-- Shared vocabulary. One precise sentence per term. Resolve conflicts — one term per concept. --&gt;
 
-```markdown
-# Actors & Roles
-<!-- Every party who interacts with the system. Name, description, capabilities, restrictions. -->
-```
+stories.md:      # User Stories
+                 &lt;!-- As a [actor], I want [action], so that [outcome]. Include evidence annotation for each. --&gt;
 
-```markdown
-# Terminology
-<!-- Shared vocabulary. One precise sentence per term. Resolve conflicts — one term per concept. -->
-```
+domain-model.md: # Domain Model
+                 &lt;!-- Entities with states, transitions, invariants, relationships, and lifecycle owners. --&gt;
 
-```markdown
-# User Stories
-<!-- As a [actor], I want [action], so that [outcome]. Include evidence annotation for each. -->
-```
+requirements.md: # Requirements
+                 &lt;!-- Functional requirements (FR-), business rules (BR-) with sources, non-functional (NFR-) with thresholds. --&gt;
 
-```markdown
-# Domain Model
-<!-- Entities with states, transitions, invariants, relationships, and lifecycle owners. -->
-```
+decisions.md:    # Decision Log
+                 &lt;!-- Settled decisions with rationale. What was decided, why, who decided, what it supersedes. --&gt;
 
-```markdown
-# Requirements
-<!-- Functional requirements (FR-), business rules (BR-) with sources, non-functional (NFR-) with thresholds. -->
-```
+questions.md:    # Open Questions
+                 &lt;!-- Unresolved items. Each needs: question, owner, what it blocks, deadline. --&gt;
 
-```markdown
-# Decision Log
-<!-- Settled decisions with rationale. Format: what was decided, why, who decided, what it supersedes. -->
-```
+changelog.md:    # Changelog
+                 &lt;!-- Version history. One sentence per substantive change. --&gt;
 
-```markdown
-# Open Questions
-<!-- Unresolved items. Each needs: question, owner, what it blocks, deadline. -->
-```
+                 | Version | Date | Changes | Author |
+                 |---------|------|---------|--------|
+                 | 0.1 | [date] | Scaffold created | [spec owner] |
+</template>
 
-```markdown
-# Changelog
-<!-- Version history. One sentence per substantive change. -->
-
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 0.1 | [date] | Scaffold created | [spec owner] |
-```
-
-### scenarios/_index.md
-
-```markdown
+<template name="scenarios-index">
 # Scenarios
 
-<!-- Add one row per scenario. Each scenario gets its own file in this directory. -->
+&lt;!-- Add one row per scenario. Each scenario gets its own file in this directory. --&gt;
 
 | Scenario | Actors | File |
 |----------|--------|------|
-```
+</template>
 
----
+<ref src="../../references/section-guide.md" name="Section guide" load="lazy"/>
 
-## References
-
-- [Section guide](../../references/section-guide.md) — what each section must contain
+</skill>
