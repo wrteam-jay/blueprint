@@ -205,6 +205,52 @@ An unresolved issue.
 
 ---
 
+## Finding
+
+An issue discovered during review or audit of a blueprint.
+
+**Structure (not states — a finding does not transition):**
+- **Location** — which section and specific element contains the problem
+- **Problem** — what is wrong and why it matters
+- **Impact** — what goes wrong if not fixed
+- **Resolution** — the fix needed (review) or fix shape (audit)
+
+**Classification (context-dependent):**
+- In **audit**: severity is Blocking (must fix before the blueprint is reliable) or Advisory (should fix to improve quality)
+- In **review**: findings are debated items with verdicts (consensus-adopt, consensus-reject, refine, split)
+
+**Invariants:**
+- Every finding identifies a specific location — not a vague area.
+- Every finding states impact — why this matters, not just that it's wrong.
+- Audit findings must have a severity classification with justification.
+- Review findings must have a verdict after debate.
+
+**Relationships:**
+- Produced by one Debate or Audit (many-to-one)
+- Belongs to one Blueprint's review or audit (many-to-one)
+
+---
+
+## Actor
+
+A role that interacts with the blueprint system. Actors are defined by what they can and cannot do — not by lifecycle states.
+
+**Structure (not states — actors do not transition):**
+- **Description** — who this actor is and in what capacity they interact
+- **Can do** — permitted actions
+- **Cannot do** — explicit restrictions
+
+**Invariants:**
+- Every actor must appear in at least one scenario.
+- Every actor has explicit can-do and cannot-do boundaries.
+- Actor names are used consistently across all sections — no synonyms.
+
+**Relationships:**
+- Participates in one or more Scenarios (many-to-many)
+- Defined in one Blueprint (many-to-one)
+
+---
+
 ## Entity Relationships
 
 ```mermaid
@@ -215,11 +261,13 @@ erDiagram
     BLUEPRINT ||--o{ ENTITY : models
     BLUEPRINT ||--o{ DECISION : records
     BLUEPRINT ||--o{ OPEN_QUESTION : tracks
+    BLUEPRINT ||--o{ ACTOR : defines
     BLUEPRINT }o--o{ BLUEPRINT : references
     SCENARIO }o--o{ ACTOR : involves
     SCENARIO }o--o{ ENTITY : references
     PANEL ||--o{ PANELLIST : includes
     DEBATE ||--|| PANEL : convened-by
     DEBATE ||--o{ FINDING : produces
+    FINDING }o--|| BLUEPRINT : belongs-to
     OPEN_QUESTION |o--o| DECISION : resolves-to
 ```

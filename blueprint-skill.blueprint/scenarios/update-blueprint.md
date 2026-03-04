@@ -2,7 +2,7 @@
 
 ## Trigger
 
-A Spec Author invokes the skill because the system has changed and the blueprint needs to reflect it. Can also be triggered by the skill's staleness detection identifying that the blueprint and system have diverged.
+A Spec Author invokes the skill because the system has changed and the blueprint needs to reflect it. Can also be triggered when the skill detects staleness opportunistically during another operation (e.g., reviewing a section and noticing it contradicts the current system or something the author just said).
 
 ## Preconditions
 

@@ -1,5 +1,34 @@
 # Changelog
 
+## 2.1 — 2026-03-04
+
+**Post-review and audit fixes.** 4 blocking and 4 advisory findings resolved from panel review (standard, 5 panellists) and systematic audit.
+
+**Actor consistency:**
+- Replaced undefined "Change Proposer" with "Spec Author" in scenario index and propose scenario trigger
+- Removed undefined "stakeholder" from propose scenario trigger
+- Added Spec Author, Blueprint Reader, Domain Expert to terminology with cross-references to actors.md
+
+**Scenario coverage:**
+- Added "Read and navigate a blueprint" scenario (scenario 8) — covers Blueprint Reader actor and delivers user stories US-10 through US-14
+
+**Domain model:**
+- Added Finding entity with structure, classification, invariants, and relationships
+- Added Actor entity (minimal — definition, invariants, relationships, no states)
+- Updated ER diagram to include Actor and Finding relationships
+
+**Terminology:**
+- Added Tier 0 (Scaffold) to tier definitions — previously used in scaffold scenario but undefined
+
+**Requirements:**
+- REQ-18: Clarified staleness detection as opportunistic (during operations already reading files), not a standalone full-blueprint scan
+- REQ-3: Changed test wording from "references" to "depends on" to distinguish informational cross-references from shared-definition dependencies
+
+**Staleness detection:**
+- Updated update scenario trigger to describe opportunistic detection model
+
+---
+
 ## 2.0 — 2026-03-04
 
 **Tier 3 (Authoritative).** Requirements expanded from 12 to 30 with verified sources and testability criteria. All 7 scenarios deepened with comprehensive error paths. Stories verified — every story has a delivering scenario.

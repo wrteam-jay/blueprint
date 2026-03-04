@@ -1,7 +1,7 @@
 # Blueprint: Blueprint Skill
 
 **Status:** Draft
-**Version:** 2.0
+**Version:** 2.1
 **Last updated:** 2026-03-04
 **Spec owner:** Jay
 **Related blueprints:** None
@@ -26,4 +26,4 @@
 
 ## Completion tier
 
-**Current: Tier 3 (Authoritative)** — All 11 sections complete or active. 30 requirements with sources and tests. 7 scenarios with full error paths. 14 decisions with rationale. 0 open questions. This blueprint is the single source of truth for the blueprint skill's behaviour.
+**Current: Tier 3 (Authoritative)** — All 11 sections complete or active. 30 requirements with sources and tests. 8 scenarios with full error paths (including reader navigation). 14 decisions with rationale. 0 open questions. All actors appear in at least one scenario. All user stories have delivering scenarios. This blueprint is the single source of truth for the blueprint skill's behaviour.

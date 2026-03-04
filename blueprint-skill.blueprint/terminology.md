@@ -4,13 +4,26 @@
 
 A living product specification organized as a directory of markdown files. Covers 11 canonical sections — from context and scope through domain model, requirements, and decision log. Describes observable system behaviour, not implementation. Maintained over time as the system evolves.
 
+## Spec Author
+
+The person who creates or updates a blueprint. Invokes sub-skills, provides domain knowledge, answers questions, and approves verification checkpoints. See [actors.md](./actors.md#spec-author) for full role description.
+
+## Blueprint Reader
+
+Anyone who consumes a completed blueprint to understand how a system works. Spans the full product team — developers, designers, QA, product managers, business stakeholders. See [actors.md](./actors.md#blueprint-reader) for full role description.
+
+## Domain Expert
+
+A person who carries knowledge about the system being documented. The source of "why" — intent behind behaviour, history behind decisions, business rules behind constraints. In solo workflows, the Spec Author serves as Domain Expert. See [actors.md](./actors.md#domain-expert) for full role description.
+
 ## Section
 
 One of 11 defined parts of a blueprint. Each section has a specific purpose, content rules, and an independent status (Pending, Draft, Complete, or Active). Sections are stored as individual files for targeted loading and independent editing.
 
 ## Tier
 
-A completion level indicating how much of a blueprint has been captured. Three tiers exist:
+A completion level indicating how much of a blueprint has been captured. Four tiers exist:
+- **Scaffold (Tier 0):** Directory structure exists with placeholder files. No content yet. Sufficient for establishing structure before content creation begins.
 - **Skeleton (Tier 1):** Context, Scope, Actors, Terminology — enough to align on vocabulary and boundaries.
 - **Workable (Tier 2):** Adds User Stories, primary Scenarios, Domain Model — enough to start implementation discussions.
 - **Authoritative (Tier 3):** Adds error scenarios, Requirements with sources, Decision Log — the single source of truth.

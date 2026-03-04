@@ -66,9 +66,9 @@
 ## DEC-10: Active staleness detection
 
 **Date:** 2026-03-04
-**Decision:** The skill actively checks for staleness rather than relying on the Spec Owner to notice. Three signals: time since last update vs system changes, sections referencing entities/flows that no longer exist, and review triggers (major release, team change). Major staleness is surfaced to the Spec Owner rather than silently fixed.
-**Why:** Passive staleness detection doesn't work — people don't notice gradual drift. The skill has access to both the blueprint and the system; it should use that to flag when they diverge. Major staleness needs human judgement, so surface it rather than auto-fix.
-**Alternatives considered:** Purely owner-driven review schedule — rejected because it requires discipline that competes with development priorities.
+**Decision:** The skill detects staleness opportunistically — during operations that already read blueprint files (updates, reviews, audits, elicitation, distillation). When the skill is working on a section and encounters content that contradicts the current system or what the Spec Author states, it surfaces the discrepancy immediately. Detection is scoped to what the skill is currently working on, not a standalone full-blueprint scan. Signals: content contradicting author statements, sections referencing entities/flows that no longer exist, and review triggers (major release, team change). Major staleness is surfaced to the Spec Owner rather than silently fixed.
+**Why:** Passive staleness detection doesn't work — people don't notice gradual drift. But a full-blueprint scan on every operation is wasteful. The skill is already reading sections during its normal work; checking those sections against reality costs nearly nothing. Major staleness needs human judgement, so surface it rather than auto-fix.
+**Alternatives considered:** Full-blueprint staleness scan — rejected as unnecessary overhead; opportunistic detection during normal operations catches the same issues. Purely owner-driven review schedule — rejected because it requires discipline that competes with development priorities.
 
 ## DEC-11: Blueprint documents current version only
 

@@ -12,7 +12,7 @@
 
 **REQ-3.** One blueprint per system. There are no cross-blueprint conflicts to manage. Conflicts within a blueprint are surfaced to the Spec Owner for resolution.
 *Source: DEC-8 (one blueprint per system).*
-*Test: No blueprint references another blueprint for shared definitions or conflict resolution.*
+*Test: No blueprint depends on another blueprint for shared definitions or conflict resolution. Informational cross-references ("related blueprints") are permitted.*
 
 ## Terminology
 
@@ -78,9 +78,9 @@
 *Source: Decision log invariant.*
 *Test: Every entry in decisions.md has a "Why" and "Alternatives considered" section with substantive content.*
 
-**REQ-18.** The skill must actively detect staleness: time since last update vs system changes, sections referencing entities or flows that no longer exist, and review triggers (major release, team change). Major staleness must be surfaced to the Spec Owner rather than silently fixed.
+**REQ-18.** The skill must detect staleness opportunistically — during operations that already read blueprint files (updates, reviews, audits, elicitation). When the skill is working on a section and encounters content that contradicts the current system or what the Spec Author states, it surfaces the discrepancy immediately. Detection is scoped to what the skill is currently working on, not a full-blueprint scan. Signals: content contradicting author statements, sections referencing entities or flows that no longer exist, and review triggers (major release, team change). Major staleness must be surfaced to the Spec Owner rather than silently fixed.
 *Source: DEC-10 (active staleness detection).*
-*Test: The skill flags stale sections with specific evidence ("entity X no longer exists in the system but is referenced in scenario Y").*
+*Test: During any operation that reads blueprint sections, the skill flags stale content with specific evidence ("entity X no longer exists in the system but is referenced in scenario Y"). No standalone staleness scan is required.*
 
 **REQ-19.** Every meaningful change to a blueprint must produce a changelog entry and update the README manifest.
 *Source: Update skill, maintenance guide.*

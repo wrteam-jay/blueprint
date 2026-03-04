@@ -2,7 +2,7 @@
 
 ## Trigger
 
-A Spec Author or stakeholder wants the panel to evaluate a proposed change to the system described by a blueprint — a new feature, behaviour change, rule modification, or scope expansion.
+A Spec Author wants the panel to evaluate a proposed change to the system described by a blueprint — a new feature, behaviour change, rule modification, or scope expansion.
 
 ## Preconditions
 
