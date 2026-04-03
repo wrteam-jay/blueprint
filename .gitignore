@@ -8,3 +8,12 @@
 
 # Claude Code
 .claude/
+
+# Python
+__pycache__/
+
+# MCP server venv
+mcp/venv/
+
+# Local MCP config (contains absolute paths)
+.mcp.json

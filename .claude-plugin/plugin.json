@@ -7,5 +7,11 @@
   },
   "repository": "https://github.com/wrteam-jay/blueprint",
   "license": "MIT",
-  "keywords": ["blueprint", "specification", "living spec", "product spec", "system spec"]
+  "keywords": ["blueprint", "specification", "living spec", "product spec", "system spec"],
+  "mcpServers": {
+    "blueprint": {
+      "command": "bash",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/run.sh"]
+    }
+  }
 }
