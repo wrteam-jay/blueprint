@@ -1,0 +1,18 @@
+{
+  "name": "blueprint",
+  "version": "1.0.0",
+  "description": "A living product specification system. Build, review, audit, and maintain structured specs for how systems work.",
+  "author": "Jay Parmar",
+  "mcpServers": {
+    "blueprint": {
+      "command": "bash",
+      "args": [
+        "${extensionPath}/mcp/run.sh"
+      ],
+      "cwd": "${extensionPath}/mcp",
+      "env": {
+        "PROJECT_ROOT": "${cwd}"
+      }
+    }
+  }
+}
